@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tourist Finder PRO 🌍</title>
+
+<style>
+:root{--bg:#f2f2f2;--card:#fff;--text:#000;--btn:#0d6efd;}
+.dark{--bg:#121212;--card:#1e1e1e;--text:#fff;--btn:#ffc107;}
+body{margin:0;font-family:Arial;background:var(--bg);color:var(--text);}
+header{background:var(--btn);color:#fff;text-align:center;padding:15px;font-size:20px;}
+.container{padding:15px;}
+input,button{width:100%;padding:12px;margin-top:10px;border-radius:6px;font-size:16px;border:none;}
+button{background:var(--btn);color:#000;}
+.card{background:var(--card);margin-top:15px;border-radius:10px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.3);position:relative;}
+.card img{width:100%;height:180px;object-fit:cover;}
+.rank{position:absolute;background:gold;padding:4px 8px;font-weight:bold;border-radius:0 0 6px 0;}
+.toggle{position:fixed;right:10px;bottom:10px;padding:10px;border-radius:50%;background:var(--btn);}
+.trending span{background:#ff5722;color:#fff;padding:6px 10px;border-radius:15px;margin:5px;display:inline-block;cursor:pointer;}
+</style>
+</head>
+
+<body>
+<header>🌍 Tourist Finder PRO ✨</header>
+
+<div class="container">
+  <input id="location" placeholder="🏙 Enter city (Jaipur, Goa)">
+  <button onclick="searchPlaces()">🔍 Search Places</button>
+
+  <h3>🔥 Trending Cities</h3>
+  <div class="trending">
+    <span onclick="setCity('Goa')">🏖 Goa</span>
+    <span onclick="setCity('Agra')">🕌 Agra</span>
+    <span onclick="setCity('Manali')">🏔 Manali</span>
+    <span onclick="setCity('Jaipur')">🏰 Jaipur</span>
+  </div>
+
+  <div id="loader"></div>
+  <div id="results"></div>
+</div>
+
+<div class="toggle" onclick="toggleMode()">🌙</div>
+
+<script>
+function toggleMode(){document.body.classList.toggle("dark");}
+function setCity(c){location.value=c;searchPlaces();}
+
+async function searchPlaces(){
+  let loc = location.value.trim();
+  if(!loc) return alert("Enter city!");
+
+  loader.innerText = "⏳ Loading...";
+  results.innerHTML = "";
+
+  // Wikipedia search
+  let res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(loc)}`);
+  let data = await res.json();
+  let text = data.extract || "";
+
+  if(!text){
+    loader.innerText = "";
+    return alert("No data found!");
+  }
+
+  // split into lines
+  let names = text.split(".").slice(0,10);
+
+  loader.innerText = "";
+
+  names.forEach((n,i)=>{
+    let place = n.split(",")[0] || loc;
+    let img = `https://source.unsplash.com/800x600/?${encodeURIComponent(place)}`;
+
+    results.innerHTML += `
+    <div class="card">
+      <div class="rank">🏆 #${i+1}</div>
+      <img src="${img}">
+      <h3>📍 ${place}</h3>
+      <p>⭐ Popular Place</p>
+    </div>`;
+  });
+}
+</script>
+</body>
+  </html>
