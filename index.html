@@ -1,83 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tourist Finder PRO 🌍</title>
+<title>Nearby Tourist Places</title>
 <style>
-:root{--bg:#f2f2f2;--card:#fff;--text:#000;--btn:#0d6efd;}
-.dark{--bg:#121212;--card:#1e1e1e;--text:#fff;--btn:#ffc107;}
-body{margin:0;font-family:Arial;background:var(--bg);color:var(--text);}
-header{background:var(--btn);color:#fff;text-align:center;padding:15px;font-size:20px;}
-.container{padding:15px;}
-input,button{width:100%;padding:12px;margin-top:10px;border-radius:6px;font-size:16px;border:none;}
-button{background:var(--btn);color:#000;}
-.card{background:var(--card);margin-top:15px;border-radius:10px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.3);position:relative;}
-.card img{width:100%;height:180px;object-fit:cover;}
-.rank{position:absolute;background:gold;padding:4px 8px;font-weight:bold;border-radius:0 0 6px 0;}
-.toggle{position:fixed;right:10px;bottom:10px;padding:10px;border-radius:50%;background:var(--btn);}
-.trending span{background:#ff5722;color:#fff;padding:6px 10px;border-radius:15px;margin:5px;display:inline-block;cursor:pointer;}
+body{font-family:Arial;margin:0;background:#f2f2f2}
+header{background:#0d6efd;color:#fff;text-align:center;padding:15px}
+.container{padding:15px}
+button{width:100%;padding:12px;background:#0d6efd;color:#fff;border:none;border-radius:6px;font-size:16px}
+.place{background:#fff;margin-top:10px;padding:10px;border-radius:6px}
 </style>
 </head>
 
 <body>
-<header>🌍 Tourist Finder PRO ✨</header>
+<header>📍 Nearby Tourist Places</header>
 
 <div class="container">
-  <input id="location" placeholder="🏙 Enter city (Jaipur, Goa)">
-  <button onclick="searchPlaces()">🔍 Search Places</button>
-
-  <h3>🔥 Trending Cities</h3>
-  <div class="trending">
-    <span onclick="setCity('Goa')">🏖 Goa</span>
-    <span onclick="setCity('Agra')">🕌 Agra</span>
-    <span onclick="setCity('Manali')">🏔 Manali</span>
-    <span onclick="setCity('Jaipur')">🏰 Jaipur</span>
-  </div>
-
-  <div id="loader"></div>
-  <div id="results"></div>
+<button onclick="getLocation()">📡 Use My Location</button>
+<div id="status"></div>
+<div id="results"></div>
 </div>
 
-<div class="toggle" onclick="toggleMode()">🌙</div>
-
 <script>
-function toggleMode(){document.body.classList.toggle("dark");}
-function setCity(c){document.getElementById("location").value=c;searchPlaces();}
+function getLocation(){
+ if(!navigator.geolocation){
+   alert("Location not supported");
+   return;
+ }
+ status.innerText="Getting your location...";
+ navigator.geolocation.getCurrentPosition(showPlaces,err=>{
+   alert("Location permission denied");
+ });
+}
 
-async function searchPlaces(){
-  let loc = document.getElementById("location").value.trim();
-  if(!loc) return alert("Enter city name!");
+async function showPlaces(pos){
+ let lat=pos.coords.latitude;
+ let lon=pos.coords.longitude;
 
-  document.getElementById("loader").innerText = "⏳ Loading...";
-  document.getElementById("results").innerHTML = "";
+ status.innerText="Finding nearby tourist places...";
 
-  // Wikipedia search for tourist places
-  const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=tourist+places+in+${encodeURIComponent(loc)}&format=json&origin=*`;
-  const res = await fetch(url);
-  const data = await res.json();
+ const query = `
+ [out:json];
+ (
+   node(around:5000,${lat},${lon})["tourism"];
+ );
+ out;`;
 
-  document.getElementById("loader").innerText = "";
+ const res = await fetch("https://overpass-api.de/api/interpreter",{
+   method:"POST",
+   body:query
+ });
+ const data = await res.json();
 
-  if(!data.query || data.query.search.length === 0){
-    alert("No tourist places found!");
-    return;
-  }
+ status.innerText="";
+ results.innerHTML="";
 
-  let results = data.query.search.slice(0,10);
+ if(!data.elements.length){
+   results.innerHTML="No tourist places found nearby.";
+   return;
+ }
 
-  results.forEach((item,i)=>{
-    let title = item.title;
-    let img = `https://source.unsplash.com/800x600/?${encodeURIComponent(title)}`;
-
-    document.getElementById("results").innerHTML += `
-    <div class="card">
-      <div class="rank">🏆 #${i+1}</div>
-      <img src="${img}">
-      <h3>📍 ${title}</h3>
-      <p>⭐ Tourist Spot</p>
-    </div>`;
-  });
+ data.elements.slice(0,20).forEach((p,i)=>{
+   let name = p.tags.name || "Unnamed place";
+   results.innerHTML += `<div class="place">🏞 ${name}</div>`;
+ });
 }
 </script>
 </body>
