@@ -6,29 +6,23 @@
 <title>BAMS MCQ Practice</title>
 
 <style>
-body{
-  margin:0;
-  font-family: system-ui, Arial, sans-serif;
-  background: linear-gradient(120deg,#fdfbfb,#ebedee);
-  text-align:center;
+body{margin:0;font-family:system-ui,Arial;background:linear-gradient(120deg,#fdfbfb,#ebedee);text-align:center;}
+h1{padding:10px;}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:360px;margin:auto;}
+button{padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,#fbc2eb,#a6c1ee);font-size:15px;box-shadow:0 4px 8px rgba(0,0,0,0.15);}
+#quizBox button{width:100%;margin:6px 0;}
+
+.popup{
+ position:fixed;top:0;left:0;width:100%;height:100%;
+ display:none;align-items:center;justify-content:center;
+ background:rgba(0,0,0,0.5);
 }
-h1{padding:15px 5px;}
-.grid{
-  display:grid;
-  grid-template-columns: repeat(2,1fr);
-  gap:12px;
-  max-width:360px;
-  margin:10px auto;
+.popupBox{
+ padding:25px;border-radius:16px;color:#fff;width:80%;max-width:300px;
 }
-button{
-  padding:14px;
-  border:none;
-  border-radius:14px;
-  background: linear-gradient(135deg,#fbc2eb,#a6c1ee);
-  font-size:15px;
-  box-shadow:0 4px 8px rgba(0,0,0,0.15);
-}
-#quizBox button{width:100%; margin:6px 0;}
+.green{background:#2ecc71;}
+.red{background:#e74c3c;}
+.purple{background:#9b59b6;}
 </style>
 </head>
 
@@ -39,8 +33,8 @@ button{
 <div id="subjectBox">
   <h3>Select Subject 👇</h3>
   <div class="grid">
-    <button onclick="selectSubject('anatomy')">🦴 Anatomy (Rachana)</button>
-    <button onclick="selectSubject('physiology')">❤️ Physiology (Kriya)</button>
+    <button onclick="selectSubject('anatomy')">🦴 Anatomy</button>
+    <button onclick="selectSubject('physiology')">❤️ Physiology</button>
     <button onclick="selectSubject('padarth')">📘 Padarth</button>
     <button onclick="selectSubject('sanskrit')">🕉 Sanskrit</button>
     <button onclick="selectSubject('samhita')">📜 Samhita</button>
@@ -79,61 +73,81 @@ button{
   <button onclick="goHome()">🏠 Home</button>
 </div>
 
+<div class="popup" id="popup">
+  <div class="popupBox" id="popupBox">
+    <p id="popupText"></p>
+    <button onclick="closePopup()">OK</button>
+  </div>
+</div>
+
 <script>
 const data={
- anatomy:{
-  ayurvedic:[{q:"शरीर कशापासून बनले आहे?",o:["दोष धातु मल","अग्नी","इंद्रिय","ओज"],a:0}],
-  modern:[{q:"How many bones in human body?",o:["206","208","210","200"],a:0}],
-  mixed:[{q:"Scapula is?",o:["Flat","Long","Short","Irregular"],a:0}]
- },
- physiology:{
-  ayurvedic:[{q:"प्राणवायूचा मुख्य कार्य कोणते?",o:["श्वसन","पचन","रक्तसंचार","मलोत्सर्ग"],a:0}],
-  modern:[{q:"Normal pulse rate?",o:["60-100","40-60","100-120","30-50"],a:0}],
-  mixed:[{q:"Heart is?",o:["Pump","Gland","Bone","Nerve"],a:0}]
- },
+ anatomy:{ayurvedic:[{q:"शरीर कशापासून बनले आहे?",o:["दोष धातु मल","अग्नी","इंद्रिय","ओज"],a:0}],
+ modern:[{q:"How many bones in human body?",o:["206","208","210","200"],a:0}],
+ mixed:[{q:"Scapula is?",o:["Flat","Long","Short","Irregular"],a:0}]},
+ physiology:{ayurvedic:[{q:"प्राणवायूचा मुख्य कार्य कोणते?",o:["श्वसन","पचन","रक्तसंचार","मलोत्सर्ग"],a:0}],
+ modern:[{q:"Normal pulse rate?",o:["60-100","40-60","100-120","30-50"],a:0}],
+ mixed:[{q:"Heart is?",o:["Pump","Gland","Bone","Nerve"],a:0}]},
  padarth:{all:[{q:"त्रिदोष म्हणजे कोणते?",o:["वात पित्त कफ","रस रक्त","अग्नी","धातू"],a:0}]},
  sanskrit:{all:[{q:"रामः हा कोणता विभक्ती आहे?",o:["प्रथमा","द्वितीया","षष्ठी","सप्तमी"],a:0}]},
  samhita:{all:[{q:"चरकसंहिता कोणत्या शाखेशी संबंधित आहे?",o:["कायचिकित्सा","शल्य","शालाक्य","अगद"],a:0}]}
 };
 
-let subject="",part="",questions=[],index=0,score=0,lastCount=0;
+let subject="",part="",questions=[],index=0,score=0,lastCount=0,answered=false;
 
-function hideAll(){
- ["subjectBox","partBox","countBox","quizBox","endBox"].forEach(id=>{
-  document.getElementById(id).style.display="none";
- });
-}
+function hideAll(){["subjectBox","partBox","countBox","quizBox","endBox"].forEach(id=>document.getElementById(id).style.display="none");}
 
-function selectSubject(s){
- subject=s; hideAll();
- if(s==="anatomy"||s==="physiology") document.getElementById("partBox").style.display="block";
- else{ part="all"; document.getElementById("countBox").style.display="block";}
-}
-
-function selectPart(p){ part=p; hideAll(); document.getElementById("countBox").style.display="block"; }
+function selectSubject(s){subject=s;hideAll();if(s==="anatomy"||s==="physiology")document.getElementById("partBox").style.display="block";else{part="all";document.getElementById("countBox").style.display="block";}}
+function selectPart(p){part=p;hideAll();document.getElementById("countBox").style.display="block";}
 
 function startQuiz(n){
  lastCount=n;
  questions=data[subject][part].slice(0,n);
- index=0; score=0;
- hideAll(); document.getElementById("quizBox").style.display="block";
+ index=0;score=0;answered=false;
+ hideAll();document.getElementById("quizBox").style.display="block";
  showQuestion();
 }
 
 function showQuestion(){
+ answered=false;
  let q=questions[index];
  document.getElementById("question").innerText=q.q;
- let opt=document.getElementById("options"); opt.innerHTML="";
+ let opt=document.getElementById("options");opt.innerHTML="";
  q.o.forEach((op,i)=>{
   let b=document.createElement("button");
-  b.innerText=op; b.onclick=()=>check(i);
+  b.innerText=op;
+  b.onclick=()=>check(i);
   opt.appendChild(b);
  });
 }
 
-function check(i){ if(i===questions[index].a) score++; }
+function showPopup(msg,color){
+ let p=document.getElementById("popup");
+ let box=document.getElementById("popupBox");
+ let txt=document.getElementById("popupText");
+ box.className="popupBox "+color;
+ txt.innerHTML=msg;
+ p.style.display="flex";
+}
+function closePopup(){document.getElementById("popup").style.display="none";}
+
+function check(i){
+ if(answered) return;
+ answered=true;
+ let q=questions[index];
+ if(i===q.a){
+  score++;
+  showPopup("✅ Correct!","green");
+ }else{
+  showPopup("❌ Wrong!<br>Correct: "+q.o[q.a],"red");
+ }
+}
 
 function nextQuestion(){
+ let q=questions[index];
+ if(!answered){
+  showPopup("⏭ Skipped!<br>Correct: "+q.o[q.a],"purple");
+ }
  index++;
  if(index<questions.length) showQuestion();
  else{
@@ -143,8 +157,8 @@ function nextQuestion(){
  }
 }
 
-function restartQuiz(){ startQuiz(lastCount); }
-function goHome(){ hideAll(); document.getElementById("subjectBox").style.display="block"; }
+function restartQuiz(){startQuiz(lastCount);}
+function goHome(){hideAll();document.getElementById("subjectBox").style.display="block";}
 </script>
 
 </body>
