@@ -38,7 +38,6 @@
       margin: 35px 0;
     }
     button {
-      background: linear-gradient(45deg, #4361ee, #3f37c9);
       color: white;
       border: none;
       padding: 16px 30px;
@@ -46,12 +45,30 @@
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(67,97,238,0.4);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
     button:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(67,97,238,0.6);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
     }
+
+    /* Subject specific colors */
+    button[data-subject="anatomy"] { background: #f4d03f; } /* Yellow */
+    button[data-subject="anatomy"]:hover { background: #f1c40f; }
+
+    button[data-subject="kriya"] { background: #3498db; } /* Blue */
+    button[data-subject="kriya"]:hover { background: #2980b9; }
+
+    button[data-subject="padarth"] { background: #27ae60; } /* Green */
+    button[data-subject="padarth"]:hover { background: #219653; }
+
+    button[data-subject="sanskrit"] { background: #9b59b6; } /* Purple */
+    button[data-subject="sanskrit"]:hover { background: #8e44ad; }
+
+    button[data-subject="samhita"] { background: #e67e22; } /* Orange */
+    button[data-subject="samhita"]:hover { background: #d35400; }
+
+    /* Other buttons */
     .count-buttons button {
       background: linear-gradient(45deg, #2a9d8f, #168a78);
       box-shadow: 0 4px 15px rgba(42,157,143,0.4);
@@ -90,6 +107,7 @@
       padding: 12px;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      color: #2c3e50;
     }
     input[type="radio"] {
       margin-right: 15px;
@@ -125,11 +143,11 @@
     <div id="subject-screen">
       <h2>विषय निवडा 🔍</h2>
       <div class="subjects">
-        <button onclick="selectSubject('anatomy')">रचना शारीर 🦴</button>
-        <button onclick="selectSubject('kriya')">क्रिया शारीर ❤️</button>
-        <button onclick="selectSubject('padarth')">पदार्थ विज्ञान ⚛️</button>
-        <button onclick="selectSubject('sanskrit')">संस्कृत 🗣️</button>
-        <button onclick="selectSubject('samhita')">संहिता 📜</button>
+        <button data-subject="anatomy" onclick="selectSubject('anatomy')">रचना शारीर 🦴</button>
+        <button data-subject="kriya" onclick="selectSubject('kriya')">क्रिया शारीर ❤️</button>
+        <button data-subject="padarth" onclick="selectSubject('padarth')">पदार्थ विज्ञान ⚛️</button>
+        <button data-subject="sanskrit" onclick="selectSubject('sanskrit')">संस्कृत 🗣️</button>
+        <button data-subject="samhita" onclick="selectSubject('samhita')">संहिता 📜</button>
       </div>
     </div>
     
@@ -195,7 +213,7 @@
     let currentIndex = 0;
     let score = 0;
 
-    // Rachana Ayurvedic (Marathi) - 10 questions
+    // Questions (10 per part/subject as before)
     allQuestions.anatomyAyurvedic = [
       { question: "रचना शारीरानुसार शरीरातील सात धातू कोणते?", options: ["रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र", "वात, पित्त, कफ", "अग्नी, ओजस, तेजस", "सत्व, रज, तम"], answer: "रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र" },
       { question: "अस्थी धातूचे मुख्य स्थान कोणते?", options: ["हाडे", "त्वचा", "रक्त", "मांसपेशी"], answer: "हाडे" },
@@ -209,7 +227,6 @@
       { question: "मानवी शरीरातील सर्वात लहान हाड कोणते?", options: ["स्टेप्स", "फेमर", "टिबिया", "रेडियस"], answer: "स्टेप्स" }
     ];
 
-    // Rachana Modern (English) - 10 questions
     allQuestions.anatomyModern = [
       { question: "How many bones are in the adult human body?", options: ["206", "208", "210", "212"], answer: "206" },
       { question: "What is the longest bone in the human body?", options: ["Femur", "Tibia", "Humerus", "Fibula"], answer: "Femur" },
@@ -223,7 +240,6 @@
       { question: "What is the functional unit of bone?", options: ["Osteon", "Nephron", "Neuron", "Alveoli"], answer: "Osteon" }
     ];
 
-    // Kriya Ayurvedic (Marathi) - 10 questions
     allQuestions.kriyaAyurvedic = [
       { question: "त्रिदोष कोणते?", options: ["वात, पित्त, कफ", "रक्त, मांस, अस्थी", "अग्नी, ओजस, तेजस", "सत्व, रज, तम"], answer: "वात, पित्त, कफ" },
       { question: "अग्नीचे मुख्य कार्य काय?", options: ["पचन आणि रूपांतर", "श्वसन", "रक्ताभिसरण", "हाड मजबूत करणे"], answer: "पचन आणि रूपांतर" },
@@ -237,7 +253,6 @@
       { question: "अपाना वायूचे कार्य?", options: ["मल-मूत्र उत्सर्जन", "पचन", "श्वसन", "रक्त निर्मिती"], answer: "मल-मूत्र उत्सर्जन" }
     ];
 
-    // Kriya Modern (English) - 10 questions
     allQuestions.kriyaModern = [
       { question: "What is the normal human body temperature?", options: ["37°C", "36°C", "38°C", "35°C"], answer: "37°C" },
       { question: "Insulin hormone is secreted by which gland?", options: ["Pancreas", "Thyroid", "Adrenal", "Pituitary"], answer: "Pancreas" },
@@ -251,7 +266,6 @@
       { question: "Which organ produces bile?", options: ["Liver", "Pancreas", "Kidney", "Stomach"], answer: "Liver" }
     ];
 
-    // Padarth Vigyan - Marathi - 10 questions
     allQuestions.padarth = [
       { question: "न्याय दर्शनानुसार पदार्थ किती?", options: ["७", "६", "९", "१६"], answer: "७" },
       { question: "'द्रव्य' म्हणजे?", options: ["पदार्थ किंवा वस्तू", "गुण", "कर्म", "सामान्यता"], answer: "पदार्थ किंवा वस्तू" },
@@ -265,7 +279,6 @@
       { question: "आकाश, वायू, तेज, जल, पृथ्वी हे काय?", options: ["पंचमहाभूत", "त्रिदोष", "धातू", "गुण"], answer: "पंचमहाभूत" }
     ];
 
-    // Sanskrit - Marathi - 10 questions
     allQuestions.sanskrit = [
       { question: "'आयुर्वेद' चा अर्थ?", options: ["जीवन विज्ञान", "औषधी ज्ञान", "रोग अभ्यास", "योग सराव"], answer: "जीवन विज्ञान" },
       { question: "'स्वास्थ्य' म्हणजे?", options: ["आरोग्य", "रोग", "औषध", "अन्न"], answer: "आरोग्य" },
@@ -279,7 +292,6 @@
       { question: "'सुश्रुत संहिता' मुख्य विषय?", options: ["शल्यचिकित्सा", "कायचिकित्सा", "कौमारभृत्य", "अगदतंत्र"], answer: "शल्यचिकित्सा" }
     ];
 
-    // Samhita - Marathi - 10 questions
     allQuestions.samhita = [
       { question: "चरक संहिता मुख्य विषय?", options: ["कायचिकित्सा", "शल्य", "कौमारभृत्य", "अगदतंत्र"], answer: "कायचिकित्सा" },
       { question: "हितायू चे मूल?", options: ["आरोग्य", "धर्म", "अर्थ", "काम"], answer: "आरोग्य" },
@@ -420,4 +432,30 @@
       document.getElementById('quiz-screen').style.display = 'block';
       currentIndex = 0;
       score = 0;
-      // Re-shuffl
+      // Fresh shuffle for new random questions
+      let subjectQs = [];
+      if (currentSubject === 'anatomy' || currentSubject === 'kriya') {
+        let ayurKey = currentSubject + 'Ayurvedic';
+        let modKey = currentSubject + 'Modern';
+        if (currentPart === 'ayurvedic') subjectQs = allQuestions[ayurKey];
+        else if (currentPart === 'modern') subjectQs = allQuestions[modKey];
+        else subjectQs = [...allQuestions[ayurKey], ...allQuestions[modKey]];
+      } else {
+        subjectQs = allQuestions[currentSubject] || [];
+      }
+      questions = [...subjectQs].sort(() => Math.random() - 0.5).slice(0, Math.min(selectedNum, subjectQs.length));
+      loadQuestion();
+    }
+
+    function restart() {
+      document.getElementById('result-screen').style.display = 'none';
+      document.getElementById('subject-screen').style.display = 'block';
+      document.getElementById('sub-screen').style.display = 'none';
+      currentSubject = '';
+      currentPart = '';
+      questions = [];
+      score = 0;
+    }
+  </script>
+</body>
+</html>
