@@ -12,12 +12,13 @@
     .subjects { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:15px; margin:30px 0; }
     button { background:#009688; color:white; border:none; padding:15px 25px; margin:10px; font-size:18px; border-radius:10px; cursor:pointer; transition:0.3s; }
     button:hover { background:#00796b; transform:scale(1.05); }
-    select { padding:12px; font-size:18px; border-radius:8px; margin:20px 0; width:280px; }
     .progress { font-size:20px; margin:20px 0; color:#555; }
     #options div { margin:15px 0; font-size:18px; text-align:left; max-width:550px; margin-left:auto; margin-right:auto; }
     input[type="radio"] { margin-right:12px; transform:scale(1.4); }
     #next-btn { margin-top:30px; padding:15px 50px; font-size:20px; }
     #result-screen h2 { font-size:2.8em; }
+    .count-buttons button { background:#4caf50; }
+    .count-buttons button:hover { background:#388e3c; }
   </style>
 </head>
 <body>
@@ -36,29 +37,29 @@
       </div>
     </div>
     
-    <!-- Kriya Shaarir Sub-Selection -->
-    <div id="kriya-sub-screen" style="display:none;">
-      <h2>क्रिया शारीर भाग निवडा</h2>
+    <!-- Sub-Selection for Rachana & Kriya -->
+    <div id="sub-screen" style="display:none;">
+      <h2 id="sub-title"></h2>
       <div class="subjects">
-        <button onclick="selectKriyaPart('ayurvedic')">आयुर्वेदिक भाग</button>
-        <button onclick="selectKriyaPart('modern')">मॉडर्न भाग</button>
-        <button onclick="selectKriyaPart('mixed')">मिक्स्ड / संयुक्त</button>
+        <button onclick="selectPart('ayurvedic')">आयुर्वेदिक भाग</button>
+        <button onclick="selectPart('modern')">मॉडर्न भाग</button>
+        <button onclick="selectPart('mixed')">मिक्स्ड / संयुक्त</button>
       </div>
     </div>
     
-    <!-- Number of Questions -->
+    <!-- Number of Questions (now as buttons) -->
     <div id="num-screen" style="display:none;">
       <h2 id="subject-title"></h2>
       <h3>किती MCQ हवे? 🔢</h3>
-      <select id="num-questions">
-        <option value="10">१० प्रश्न ⚡ जलद सराव</option>
-        <option value="20">२० प्रश्न 🔥 मध्यम</option>
-        <option value="30">३० प्रश्न 🚀 चांगली तयारी</option>
-        <option value="40">४० प्रश्न 🏅 प्रगत</option>
-        <option value="50">५० प्रश्न 🌟 पूर्ण पॉवर</option>
-      </select>
-      <br><br>
-      <button onclick="startQuiz()">क्विझ सुरू करा! 🎯🚀</button>
+      <div class="subjects count-buttons">
+        <button onclick="setCount(10)">१० प्रश्न ⚡</button>
+        <button onclick="setCount(20)">२० प्रश्न 🔥</button>
+        <button onclick="setCount(30)">३० प्रश्न 🚀</button>
+        <button onclick="setCount(40)">४० प्रश्न 🏅</button>
+        <button onclick="setCount(50)">५० प्रश्न 🌟</button>
+      </div>
+      <br>
+      <button onclick="startQuiz()" style="background:#ff5722; font-size:22px; padding:18px 60px;">क्विझ सुरू करा! 🎯</button>
     </div>
     
     <!-- Quiz Screen -->
@@ -79,9 +80,11 @@
 
   <script>
     let currentSubject = '';
-    let kriyaPart = ''; // 'ayurvedic', 'modern', 'mixed'
+    let currentPart = ''; // 'ayurvedic', 'modern', 'mixed'
+    let selectedNum = 10;
     let allQuestions = {
-      anatomy: [],
+      anatomyAyurvedic: [],
+      anatomyModern: [],
       kriyaAyurvedic: [],
       kriyaModern: [],
       padarth: [],
@@ -91,100 +94,91 @@
     let questions = [];
     let currentIndex = 0;
     let score = 0;
-    let selectedNum = 10;
 
-    // ------------------- Questions -------------------
-    
-    // Rachana Shaarir (Anatomy) - Marathi
-    allQuestions.anatomy = [
-      { question: "प्रौढ मानवी शरीरात एकूण किती हाडे असतात?", options: ["२०६", "२०८", "२१०", "२१२"], answer: "२०६" },
-      { question: "मानवी शरीरातील सर्वात लांब हाड कोणते?", options: ["फेमर", "टिबिया", "ह्यूमरस", "फायब्युला"], answer: "फेमर" },
-      { question: "हृदयात किती कप्पे असतात?", options: ["२", "३", "४", "५"], answer: "४" },
-      { question: "मेंदूचे संरक्षक आवरण काय?", options: ["मेनिंजेस", "पेरिकार्डियम", "प्ल्युरा", "पेरिटोनियम"], answer: "मेनिंजेस" },
-      { question: "शरीरातील सर्वात मोठा अवयव?", options: ["त्वचा", "यकृत", "फुफ्फुसे", "हृदय"], answer: "त्वचा" }
+    // Rachana Ayurvedic - Marathi
+    allQuestions.anatomyAyurvedic = [
+      { question: "रचना शारीरानुसार शरीरातील सात धातू कोणते?", options: ["रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र", "वात, पित्त, कफ", "अग्नी, ओजस", "सत्व, रज, तम"], answer: "रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र" },
+      { question: "अस्थी धातूचे मुख्य स्थान कोणते?", options: ["हाडे", "त्वचा", "रक्त", "मांसपेशी"], answer: "हाडे" },
+      { question: "शरीरातील सर्वात मोठी हाडी कोणती?", options: ["फेमर", "टिबिया", "ह्यूमरस", "कवटी"], answer: "फेमर" }
     ];
 
-    // Kriya Shaarir - Ayurvedic Part (Marathi)
+    // Rachana Modern - English
+    allQuestions.anatomyModern = [
+      { question: "How many bones are in the adult human body?", options: ["206", "208", "210", "212"], answer: "206" },
+      { question: "What is the longest bone in the human body?", options: ["Femur", "Tibia", "Humerus", "Fibula"], answer: "Femur" },
+      { question: "How many chambers are in the human heart?", options: ["2", "3", "4", "5"], answer: "4" },
+      { question: "What is the largest organ in the human body?", options: ["Skin", "Liver", "Lungs", "Heart"], answer: "Skin" }
+    ];
+
+    // Kriya Ayurvedic - Marathi
     allQuestions.kriyaAyurvedic = [
       { question: "त्रिदोष कोणते?", options: ["वात, पित्त, कफ", "रक्त, मांस, अस्थी", "अग्नी, ओजस, तेजस", "सत्व, रज, तम"], answer: "वात, पित्त, कफ" },
       { question: "अग्नीचे मुख्य कार्य काय?", options: ["पचन आणि रूपांतर", "श्वसन", "रक्ताभिसरण", "हाड मजबूत करणे"], answer: "पचन आणि रूपांतर" },
-      { question: "ओजस म्हणजे काय?", options: ["रोगप्रतिकारक शक्ती आणि जीवनशक्ती", "विष", "कचरा", "वेदना"], answer: "रोगप्रतिकारक शक्ती आणि जीवनशक्ती" },
-      { question: "धातू किती प्रकारचे?", options: ["७", "५", "३", "९"], answer: "७" },
-      { question: "वात दोषाचे मुख्य गुण?", options: ["रूक्ष, लघु, शीत", "स्निग्ध, गुरु, उष्ण", "मंद, स्थिर", "तीक्ष्ण, द्रव"], answer: "रूक्ष, लघु, शीत" }
+      { question: "ओजस म्हणजे काय?", options: ["रोगप्रतिकारक शक्ती आणि जीवनशक्ती", "विष", "कचरा", "वेदना"], answer: "रोगप्रतिकारक शक्ती आणि जीवनशक्ती" }
     ];
 
-    // Kriya Shaarir - Modern Part (English)
+    // Kriya Modern - English
     allQuestions.kriyaModern = [
       { question: "What is the normal human body temperature?", options: ["37°C", "36°C", "38°C", "35°C"], answer: "37°C" },
       { question: "Insulin hormone is secreted by which gland?", options: ["Pancreas", "Thyroid", "Adrenal", "Pituitary"], answer: "Pancreas" },
-      { question: "Main function of Red Blood Cells (RBCs)?", options: ["Oxygen transport", "Immunity", "Blood clotting", "Digestion"], answer: "Oxygen transport" },
-      { question: "Functional unit of kidney?", options: ["Nephron", "Neuron", "Alveoli", "Osteon"], answer: "Nephron" },
-      { question: "Breathing rate is controlled by which part of brain?", options: ["Medulla oblongata", "Cerebellum", "Hypothalamus", "Cerebrum"], answer: "Medulla oblongata" }
+      { question: "Main function of Red Blood Cells (RBCs)?", options: ["Oxygen transport", "Immunity", "Blood clotting", "Digestion"], answer: "Oxygen transport" }
     ];
 
-    // पदार्थ विज्ञान - Marathi
+    // Padarth Vigyan - Marathi
     allQuestions.padarth = [
       { question: "न्याय दर्शनानुसार पदार्थ किती?", options: ["७", "६", "९", "१६"], answer: "७" },
-      { question: "'द्रव्य' म्हणजे?", options: ["पदार्थ किंवा वस्तू", "गुण", "कर्म", "सामान्यता"], answer: "पदार्थ किंवा वस्तू" },
-      { question: "पंचमहाभूत किती?", options: ["५", "४", "३", "६"], answer: "५" },
-      { question: "गुण किती प्रकारचे?", options: ["२०", "१०", "५", "२५"], answer: "२०" }
+      { question: "'द्रव्य' म्हणजे?", options: ["पदार्थ किंवा वस्तू", "गुण", "कर्म", "सामान्यता"], answer: "पदार्थ किंवा वस्तू" }
     ];
 
-    // संस्कृत - Marathi
+    // Sanskrit - Marathi
     allQuestions.sanskrit = [
       { question: "'आयुर्वेद' चा अर्थ?", options: ["जीवन विज्ञान", "औषधी ज्ञान", "रोग अभ्यास", "योग सराव"], answer: "जीवन विज्ञान" },
-      { question: "'स्वास्थ्य' म्हणजे?", options: ["आरोग्य", "रोग", "औषध", "अन्न"], answer: "आरोग्य" },
-      { question: "'दोष' चा अर्थ?", options: ["असंतुलन कारक", "संतुलन", "ऊर्जा", "महाभूत"], answer: "असंतुलन कारक" }
+      { question: "'स्वास्थ्य' म्हणजे?", options: ["आरोग्य", "रोग", "औषध", "अन्न"], answer: "आरोग्य" }
     ];
 
-    // संहिता - Marathi
+    // Samhita - Marathi
     allQuestions.samhita = [
       { question: "चरक संहिता मुख्य विषय?", options: ["कायचिकित्सा", "शल्य", "कौमारभृत्य", "अगदतंत्र"], answer: "कायचिकित्सा" },
-      { question: "हितायू चे मूल?", options: ["आरोग्य", "धर्म", "अर्थ", "काम"], answer: "आरोग्य" },
-      { question: "त्रिमर्म किती?", options: ["३", "५", "७", "९"], answer: "३" }
+      { question: "हितायू चे मूल?", options: ["आरोग्य", "धर्म", "अर्थ", "काम"], answer: "आरोग्य" }
     ];
 
-    // ------------------- Logic -------------------
     function selectSubject(subject) {
       currentSubject = subject;
-      if (subject === 'kriya') {
-        document.getElementById('subject-screen').style.display = 'none';
-        document.getElementById('kriya-sub-screen').style.display = 'block';
-      } else {
-        showNumScreen(subject);
-      }
-    }
-
-    function selectKriyaPart(part) {
-      kriyaPart = part;
-      showNumScreen('kriya');
-    }
-
-    function showNumScreen(sub) {
-      let title = '';
-      if (sub === 'anatomy') title = 'Anatomy (रचना शारीर)';
-      else if (sub === 'kriya') {
-        let partText = kriyaPart === 'ayurvedic' ? 'आयुर्वेदिक' : kriyaPart === 'modern' ? 'मॉडर्न' : 'मिक्स्ड';
-        title = `Physiology (क्रिया शारीर) - ${partText} भाग`;
-      }
-      else if (sub === 'padarth') title = 'पदार्थ विज्ञान';
-      else if (sub === 'sanskrit') title = 'संस्कृत';
-      else if (sub === 'samhita') title = 'संहिता';
-
-      document.getElementById('subject-title').innerText = `निवडले: ${title} 🔥🧠`;
+      document.getElementById('sub-title').innerText = subject === 'anatomy' ? 'रचना शारीर भाग निवडा' : 'क्रिया शारीर भाग निवडा';
       document.getElementById('subject-screen').style.display = 'none';
-      document.getElementById('kriya-sub-screen').style.display = 'none';
+      document.getElementById('sub-screen').style.display = 'block';
+    }
+
+    function selectPart(part) {
+      currentPart = part;
+      let title = '';
+      if (currentSubject === 'anatomy') title = 'Anatomy (रचना शारीर)';
+      else if (currentSubject === 'kriya') title = 'Physiology (क्रिया शारीर)';
+      else if (currentSubject === 'padarth') title = 'पदार्थ विज्ञान';
+      else if (currentSubject === 'sanskrit') title = 'संस्कृत';
+      else if (currentSubject === 'samhita') title = 'संहिता';
+
+      let partText = part === 'ayurvedic' ? 'आयुर्वेदिक' : part === 'modern' ? 'मॉडर्न' : 'मिक्स्ड';
+      document.getElementById('subject-title').innerText = `निवडले: ${title} - ${partText} भाग 🔥🧠`;
+      document.getElementById('sub-screen').style.display = 'none';
       document.getElementById('num-screen').style.display = 'block';
     }
 
+    function setCount(num) {
+      selectedNum = num;
+      startQuiz();
+    }
+
     function startQuiz() {
-      selectedNum = parseInt(document.getElementById('num-questions').value);
       let subjectQs = [];
 
-      if (currentSubject === 'kriya') {
-        if (kriyaPart === 'ayurvedic') subjectQs = allQuestions.kriyaAyurvedic;
-        else if (kriyaPart === 'modern') subjectQs = allQuestions.kriyaModern;
-        else subjectQs = [...allQuestions.kriyaAyurvedic, ...allQuestions.kriyaModern];
+      if (currentSubject === 'anatomy' || currentSubject === 'kriya') {
+        let ayurKey = currentSubject + 'Ayurvedic';
+        let modKey = currentSubject + 'Modern';
+
+        if (currentPart === 'ayurvedic') subjectQs = allQuestions[ayurKey];
+        else if (currentPart === 'modern') subjectQs = allQuestions[modKey];
+        else subjectQs = [...allQuestions[ayurKey], ...allQuestions[modKey]];
       } else {
         subjectQs = allQuestions[currentSubject] || [];
       }
@@ -259,12 +253,12 @@
     function restart() {
       document.getElementById('result-screen').style.display = 'none';
       document.getElementById('subject-screen').style.display = 'block';
-      document.getElementById('kriya-sub-screen').style.display = 'none';
+      document.getElementById('sub-screen').style.display = 'none';
       currentSubject = '';
-      kriyaPart = '';
+      currentPart = '';
       questions = [];
       score = 0;
     }
   </script>
 </body>
-  </html>
+</html>
