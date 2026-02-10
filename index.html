@@ -11,9 +11,9 @@
     h1 { color: #264653; font-weight: 700; margin-bottom: 30px; }
     h2, h3 { color: #2a9d8f; }
     .subjects { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin: 35px 0; }
-    button { border: none; padding: 16px 30px; font-size: 18px; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3); color: #000000; font-weight: 600; }
+    button { border: none; padding: 16px 30px; font-size: 18px; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
     button:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
-    button[data-subject="anatomy"] { background: #f4d03f; }
+    button[data-subject="anatomy"] { background: #f4d03f; color: #1a1a1a; }
     button[data-subject="anatomy"]:hover { background: #f1c40f; }
     button[data-subject="kriya"] { background: #3498db; color: white; }
     button[data-subject="kriya"]:hover { background: #2980b9; }
@@ -23,19 +23,16 @@
     button[data-subject="sanskrit"]:hover { background: #8e44ad; }
     button[data-subject="samhita"] { background: #e67e22; color: white; }
     button[data-subject="samhita"]:hover { background: #d35400; }
-    #sub-screen button:nth-child(1) { background: linear-gradient(45deg, #4caf50, #66bb6a); }
-    #sub-screen button:nth-child(2) { background: linear-gradient(45deg, #00acc1, #26c6da); }
-    #sub-screen button:nth-child(3) { background: linear-gradient(45deg, #ff7043, #ab47bc); }
+    #sub-screen button:nth-child(1) { background: linear-gradient(45deg, #4caf50, #66bb6a); color: #000000; font-weight: 600; }
+    #sub-screen button:nth-child(2) { background: linear-gradient(45deg, #00acc1, #26c6da); color: #000000; font-weight: 600; }
+    #sub-screen button:nth-child(3) { background: linear-gradient(45deg, #ff7043, #ab47bc); color: #000000; font-weight: 600; }
     .count-buttons button { background: linear-gradient(45deg, #2a9d8f, #168a78); color: white; }
     .start-btn { background: linear-gradient(45deg, #f4a261, #e76f51); font-size: 24px; padding: 20px 70px; color: white; }
-    
-    /* Restart & Home buttons - attractive colors */
-    .restart-buttons button { margin: 15px; font-size: 20px; padding: 16px 45px; }
-    #restart-btn { background: linear-gradient(45deg, #667eea, #764ba2); color: white; }
+    .restart-buttons button { margin: 15px; font-size: 20px; padding: 16px 45px; color: white; cursor: pointer; font-weight: 600; }
+    #restart-btn { background: linear-gradient(45deg, #667eea, #764ba2); }
     #restart-btn:hover { background: linear-gradient(45deg, #5a67d8, #6b46c1); }
-    #home-btn { background: linear-gradient(45deg, #48bb78, #38a169); color: white; }
+    #home-btn { background: linear-gradient(45deg, #48bb78, #38a169); }
     #home-btn:hover { background: linear-gradient(45deg, #38a169, #2f855a); }
-
     #next-btn { margin-top: 35px; padding: 18px 60px; font-size: 22px; background: linear-gradient(45deg, #ed8936, #f6ad55); color: #000000 !important; font-weight: 600; cursor: pointer; }
     .progress { font-size: 22px; margin: 25px 0; color: #2a9d8f; }
     #options div { margin: 18px 0; font-size: 19px; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto; padding: 20px 20px 20px 70px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.2s ease; color: #2c3e50; position: relative; user-select: none; }
@@ -129,7 +126,7 @@
     let score = 0;
     let hasAnswered = false;
 
-    // सर्व प्रश्न (तुझ्या मूळ कोडप्रमाणे)
+    // सर्व प्रश्न (तुझ्या मूळ कोडप्रमाणे पूर्ण)
     allQuestions.anatomyAyurvedic = [
       { question: "रचना शारीरानुसार शरीरातील सात धातू कोणते?", options: ["रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र", "वात, पित्त, कफ", "अग्नी, ओजस, तेजस", "सत्व, रज, तम"], answer: "रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र" },
       { question: "अस्थी धातूचे मुख्य स्थान कोणते?", options: ["हाडे", "त्वचा", "रक्त", "मांसपेशी"], answer: "हाडे" },
@@ -253,21 +250,10 @@
       startQuiz();
     }
 
-    function getSubjectQuestions() {
-      if (currentSubject === 'anatomy' || currentSubject === 'kriya') {
-        let ayurKey = currentSubject + 'Ayurvedic';
-        let modKey = currentSubject + 'Modern';
-        if (currentPart === 'ayurvedic') return allQuestions[ayurKey];
-        if (currentPart === 'modern') return allQuestions[modKey];
-        return [...allQuestions[ayurKey], ...allQuestions[modKey]];
-      }
-      return allQuestions[currentSubject] || [];
-    }
-
     function startQuiz() {
       let subjectQs = getSubjectQuestions();
       if (subjectQs.length === 0) {
-        alert('या विषयात प्रश्न उपलब्ध नाहीत!');
+        alert('या भागात प्रश्न नाहीत!');
         goToHome();
         return;
       }
@@ -282,6 +268,17 @@
       loadQuestion();
     }
 
+    function getSubjectQuestions() {
+      if (currentSubject === 'anatomy' || currentSubject === 'kriya') {
+        let ayurKey = currentSubject + 'Ayurvedic';
+        let modKey = currentSubject + 'Modern';
+        if (currentPart === 'ayurvedic') return allQuestions[ayurKey] || [];
+        if (currentPart === 'modern') return allQuestions[modKey] || [];
+        return [...(allQuestions[ayurKey] || []), ...(allQuestions[modKey] || [])];
+      }
+      return allQuestions[currentSubject] || [];
+    }
+
     function loadQuestion() {
       if (currentIndex >= questions.length) {
         showResult();
@@ -289,16 +286,6 @@
       }
 
       const q = questions[currentIndex];
-
-      // जर प्रश्नच येत नसेल (empty)
-      if (!q || !q.question) {
-        alert("प्रश्न उपलब्ध नाही! योग्य उत्तर: " + (q?.answer || "माहिती नाही"));
-        currentIndex++;
-        loadQuestion();
-        return;
-      }
-
-      hasAnswered = false;
       document.getElementById('question').innerHTML = `${currentIndex + 1}. ${q.question} 🤔`;
       document.getElementById('current').innerText = currentIndex + 1;
       document.getElementById('total').innerText = questions.length;
@@ -336,29 +323,19 @@
         feedback.innerHTML = '✅ बरोबर!<br>+१ गुण 🔥';
         feedback.classList.add('correct');
       } else {
-        if (isSkip) {
-          feedback.innerHTML = 'Skipped!<br>योग्य उत्तर: ' + correctAns;
-        } else {
-          feedback.innerHTML = '❌ चुकीचे!<br>योग्य उत्तर: ' + correctAns;
-        }
+        feedback.innerHTML = isSkip ? 'Skipped!<br>योग्य उत्तर: ' + correctAns : '❌ चुकीचे!<br>योग्य उत्तर: ' + correctAns;
         feedback.classList.add('wrong');
       }
 
       feedback.classList.add('show');
-
-      setTimeout(() => {
-        feedback.classList.remove('show');
-      }, 2800);
+      setTimeout(() => feedback.classList.remove('show'), 2800);
     }
 
     function nextQuestion() {
-      if (hasAnswered === false) {
-        const q = questions[currentIndex];
-        if (q) {
-          showFeedback(false, q.answer, true);
-        }
+      const q = questions[currentIndex];
+      if (!hasAnswered && q) {
+        showFeedback(false, q.answer, true);
       }
-
       currentIndex++;
       loadQuestion();
     }
@@ -367,7 +344,7 @@
       document.getElementById('quiz-screen').style.display = 'none';
       document.getElementById('result-screen').style.display = 'block';
 
-      const percent = questions.length > 0 ? (score / questions.length) * 100 : 0;
+      const percent = (score / questions.length) * 100;
       document.getElementById('score-display').innerHTML = `गुण: ${score} / ${questions.length} (${percent.toFixed(0)}%)`;
 
       let msg = '';
@@ -389,7 +366,7 @@
       hasAnswered = false;
 
       let subjectQs = getSubjectQuestions();
-      questions = [...subjectQs].sort(() => Math.random() - 0.5).slice(0, Math.min(selectedNum, subjectQs.length));
+      questions = [...subjectQs].sort(() => Math.random() - 0.5).slice(0, Math.min(selectedNum, subjectQs.length || 0));
 
       loadQuestion();
     }
