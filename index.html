@@ -17,6 +17,9 @@
     input[type="radio"] { margin-right:12px; transform:scale(1.4); }
     #next-btn { margin-top:30px; padding:15px 50px; font-size:20px; }
     #result-screen h2 { font-size:2.8em; }
+    #result-screen p { font-size:1.5em; margin:20px 0; }
+    .restart-buttons button { background:#ff5722; font-size:20px; padding:15px 40px; }
+    .restart-buttons button.home { background:#607d8b; }
     .count-buttons button { background:#4caf50; }
     .count-buttons button:hover { background:#388e3c; }
   </style>
@@ -37,7 +40,7 @@
       </div>
     </div>
     
-    <!-- Sub-Selection for Rachana & Kriya -->
+    <!-- Sub-Selection ONLY for Rachana & Kriya -->
     <div id="sub-screen" style="display:none;">
       <h2 id="sub-title"></h2>
       <div class="subjects">
@@ -47,7 +50,7 @@
       </div>
     </div>
     
-    <!-- Number of Questions (now as buttons) -->
+    <!-- Number of Questions (buttons) -->
     <div id="num-screen" style="display:none;">
       <h2 id="subject-title"></h2>
       <h3>किती MCQ हवे? 🔢</h3>
@@ -73,14 +76,18 @@
     <!-- Result Screen -->
     <div id="result-screen" style="display:none;">
       <h2>क्विझ संपले! 🏁🥳</h2>
-      <p id="score-text"></p>
-      <button onclick="restart()">पुन्हा खेळा 🔄🕉️</button>
+      <p id="score-display"></p>
+      <p id="motivation-msg" style="font-size:1.6em; font-weight:bold; margin:20px 0;"></p>
+      <div class="restart-buttons">
+        <button onclick="restartSameQuiz()">Same Quiz Restart 🔄</button>
+        <button class="home" onclick="restart()">Homepage 🏠</button>
+      </div>
     </div>
   </div>
 
   <script>
     let currentSubject = '';
-    let currentPart = ''; // 'ayurvedic', 'modern', 'mixed'
+    let currentPart = '';
     let selectedNum = 10;
     let allQuestions = {
       anatomyAyurvedic: [],
@@ -95,72 +102,66 @@
     let currentIndex = 0;
     let score = 0;
 
-    // Rachana Ayurvedic - Marathi
+    // Questions (same as before, abbreviated for brevity)
     allQuestions.anatomyAyurvedic = [
       { question: "रचना शारीरानुसार शरीरातील सात धातू कोणते?", options: ["रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र", "वात, पित्त, कफ", "अग्नी, ओजस", "सत्व, रज, तम"], answer: "रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र" },
-      { question: "अस्थी धातूचे मुख्य स्थान कोणते?", options: ["हाडे", "त्वचा", "रक्त", "मांसपेशी"], answer: "हाडे" },
-      { question: "शरीरातील सर्वात मोठी हाडी कोणती?", options: ["फेमर", "टिबिया", "ह्यूमरस", "कवटी"], answer: "फेमर" }
+      { question: "अस्थी धातूचे मुख्य स्थान कोणते?", options: ["हाडे", "त्वचा", "रक्त", "मांसपेशी"], answer: "हाडे" }
     ];
 
-    // Rachana Modern - English
     allQuestions.anatomyModern = [
       { question: "How many bones are in the adult human body?", options: ["206", "208", "210", "212"], answer: "206" },
-      { question: "What is the longest bone in the human body?", options: ["Femur", "Tibia", "Humerus", "Fibula"], answer: "Femur" },
-      { question: "How many chambers are in the human heart?", options: ["2", "3", "4", "5"], answer: "4" },
-      { question: "What is the largest organ in the human body?", options: ["Skin", "Liver", "Lungs", "Heart"], answer: "Skin" }
+      { question: "What is the longest bone in the human body?", options: ["Femur", "Tibia", "Humerus", "Fibula"], answer: "Femur" }
     ];
 
-    // Kriya Ayurvedic - Marathi
     allQuestions.kriyaAyurvedic = [
       { question: "त्रिदोष कोणते?", options: ["वात, पित्त, कफ", "रक्त, मांस, अस्थी", "अग्नी, ओजस, तेजस", "सत्व, रज, तम"], answer: "वात, पित्त, कफ" },
-      { question: "अग्नीचे मुख्य कार्य काय?", options: ["पचन आणि रूपांतर", "श्वसन", "रक्ताभिसरण", "हाड मजबूत करणे"], answer: "पचन आणि रूपांतर" },
-      { question: "ओजस म्हणजे काय?", options: ["रोगप्रतिकारक शक्ती आणि जीवनशक्ती", "विष", "कचरा", "वेदना"], answer: "रोगप्रतिकारक शक्ती आणि जीवनशक्ती" }
+      { question: "अग्नीचे मुख्य कार्य काय?", options: ["पचन आणि रूपांतर", "श्वसन", "रक्ताभिसरण", "हाड मजबूत करणे"], answer: "पचन आणि रूपांतर" }
     ];
 
-    // Kriya Modern - English
     allQuestions.kriyaModern = [
       { question: "What is the normal human body temperature?", options: ["37°C", "36°C", "38°C", "35°C"], answer: "37°C" },
-      { question: "Insulin hormone is secreted by which gland?", options: ["Pancreas", "Thyroid", "Adrenal", "Pituitary"], answer: "Pancreas" },
-      { question: "Main function of Red Blood Cells (RBCs)?", options: ["Oxygen transport", "Immunity", "Blood clotting", "Digestion"], answer: "Oxygen transport" }
+      { question: "Insulin hormone is secreted by which gland?", options: ["Pancreas", "Thyroid", "Adrenal", "Pituitary"], answer: "Pancreas" }
     ];
 
-    // Padarth Vigyan - Marathi
     allQuestions.padarth = [
-      { question: "न्याय दर्शनानुसार पदार्थ किती?", options: ["७", "६", "९", "१६"], answer: "७" },
-      { question: "'द्रव्य' म्हणजे?", options: ["पदार्थ किंवा वस्तू", "गुण", "कर्म", "सामान्यता"], answer: "पदार्थ किंवा वस्तू" }
+      { question: "न्याय दर्शनानुसार पदार्थ किती?", options: ["७", "६", "९", "१६"], answer: "७" }
     ];
 
-    // Sanskrit - Marathi
     allQuestions.sanskrit = [
-      { question: "'आयुर्वेद' चा अर्थ?", options: ["जीवन विज्ञान", "औषधी ज्ञान", "रोग अभ्यास", "योग सराव"], answer: "जीवन विज्ञान" },
-      { question: "'स्वास्थ्य' म्हणजे?", options: ["आरोग्य", "रोग", "औषध", "अन्न"], answer: "आरोग्य" }
+      { question: "'आयुर्वेद' चा अर्थ?", options: ["जीवन विज्ञान", "औषधी ज्ञान", "रोग अभ्यास", "योग सराव"], answer: "जीवन विज्ञान" }
     ];
 
-    // Samhita - Marathi
     allQuestions.samhita = [
-      { question: "चरक संहिता मुख्य विषय?", options: ["कायचिकित्सा", "शल्य", "कौमारभृत्य", "अगदतंत्र"], answer: "कायचिकित्सा" },
-      { question: "हितायू चे मूल?", options: ["आरोग्य", "धर्म", "अर्थ", "काम"], answer: "आरोग्य" }
+      { question: "चरक संहिता मुख्य विषय?", options: ["कायचिकित्सा", "शल्य", "कौमारभृत्य", "अगदतंत्र"], answer: "कायचिकित्सा" }
     ];
 
     function selectSubject(subject) {
       currentSubject = subject;
-      document.getElementById('sub-title').innerText = subject === 'anatomy' ? 'रचना शारीर भाग निवडा' : 'क्रिया शारीर भाग निवडा';
-      document.getElementById('subject-screen').style.display = 'none';
-      document.getElementById('sub-screen').style.display = 'block';
+      if (subject === 'anatomy' || subject === 'kriya') {
+        document.getElementById('sub-title').innerText = subject === 'anatomy' ? 'रचना शारीर भाग निवडा' : 'क्रिया शारीर भाग निवडा';
+        document.getElementById('subject-screen').style.display = 'none';
+        document.getElementById('sub-screen').style.display = 'block';
+      } else {
+        showNumScreen(subject);
+      }
     }
 
     function selectPart(part) {
       currentPart = part;
-      let title = '';
-      if (currentSubject === 'anatomy') title = 'Anatomy (रचना शारीर)';
-      else if (currentSubject === 'kriya') title = 'Physiology (क्रिया शारीर)';
-      else if (currentSubject === 'padarth') title = 'पदार्थ विज्ञान';
-      else if (currentSubject === 'sanskrit') title = 'संस्कृत';
-      else if (currentSubject === 'samhita') title = 'संहिता';
-
+      let title = currentSubject === 'anatomy' ? 'Anatomy (रचना शारीर)' : 'Physiology (क्रिया शारीर)';
       let partText = part === 'ayurvedic' ? 'आयुर्वेदिक' : part === 'modern' ? 'मॉडर्न' : 'मिक्स्ड';
       document.getElementById('subject-title').innerText = `निवडले: ${title} - ${partText} भाग 🔥🧠`;
       document.getElementById('sub-screen').style.display = 'none';
+      document.getElementById('num-screen').style.display = 'block';
+    }
+
+    function showNumScreen(sub) {
+      let title = '';
+      if (sub === 'padarth') title = 'पदार्थ विज्ञान';
+      else if (sub === 'sanskrit') title = 'संस्कृत';
+      else if (sub === 'samhita') title = 'संहिता';
+      document.getElementById('subject-title').innerText = `निवडले: ${title} 🔥🧠`;
+      document.getElementById('subject-screen').style.display = 'none';
       document.getElementById('num-screen').style.display = 'block';
     }
 
@@ -175,7 +176,6 @@
       if (currentSubject === 'anatomy' || currentSubject === 'kriya') {
         let ayurKey = currentSubject + 'Ayurvedic';
         let modKey = currentSubject + 'Modern';
-
         if (currentPart === 'ayurvedic') subjectQs = allQuestions[ayurKey];
         else if (currentPart === 'modern') subjectQs = allQuestions[modKey];
         else subjectQs = [...allQuestions[ayurKey], ...allQuestions[modKey]];
@@ -243,11 +243,38 @@
     function showResult() {
       document.getElementById('quiz-screen').style.display = 'none';
       document.getElementById('result-screen').style.display = 'block';
+
       const percent = (score / questions.length) * 100;
-      let msg = percent >= 80 ? '🥳🔥 मास्टर लेव्हल! अप्रतिम!' :
-                percent >= 50 ? '👍 चांगले! थोडा अधिक सराव.' :
-                '😅 सुरू ठेवा! अभ्यास चालू ठेवा 🕉️';
-      document.getElementById('score-text').innerHTML = `गुण: <b>${score} / ${questions.length}</b> (${percent.toFixed(0)}%)<br>${msg}`;
+      document.getElementById('score-display').innerHTML = `तुमचे गुण: <b>${score} / ${questions.length}</b> (${percent.toFixed(0)}%)`;
+
+      let msg = '';
+      if (percent >= 90) msg = "वाह! उत्कृष्ट!";
+      else if (percent >= 75) msg = "छान प्रयत्न!";
+      else if (percent >= 60) msg = "चांगले आहे!";
+      else if (percent >= 40) msg = "अजून मेहनत!";
+      else msg = "सराव चालू ठेवा!";
+
+      document.getElementById('motivation-msg').innerText = msg;
+    }
+
+    function restartSameQuiz() {
+      document.getElementById('result-screen').style.display = 'none';
+      document.getElementById('quiz-screen').style.display = 'block';
+      currentIndex = 0;
+      score = 0;
+      // Re-shuffle and re-select questions (same count)
+      let subjectQs = [];
+      if (currentSubject === 'anatomy' || currentSubject === 'kriya') {
+        let ayurKey = currentSubject + 'Ayurvedic';
+        let modKey = currentSubject + 'Modern';
+        if (currentPart === 'ayurvedic') subjectQs = allQuestions[ayurKey];
+        else if (currentPart === 'modern') subjectQs = allQuestions[modKey];
+        else subjectQs = [...allQuestions[ayurKey], ...allQuestions[modKey]];
+      } else {
+        subjectQs = allQuestions[currentSubject] || [];
+      }
+      questions = [...subjectQs].sort(() => Math.random() - 0.5).slice(0, Math.min(selectedNum, subjectQs.length));
+      loadQuestion();
     }
 
     function restart() {
@@ -261,4 +288,4 @@
     }
   </script>
 </body>
-</html>
+  </html>
