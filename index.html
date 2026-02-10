@@ -3,70 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BAMS MCQ Practice</title>
+<title>AyurQuest</title>
+
 <style>
-body{margin:0;font-family:system-ui,Arial;background:linear-gradient(120deg,#fdfbfb,#ebedee);text-align:center;}
-h1{padding:10px;}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:360px;margin:auto;}
-button{padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,#fbc2eb,#a6c1ee);font-size:15px;box-shadow:0 4px 8px rgba(0,0,0,0.15);}
-#quizBox button{width:100%;margin:6px 0;}
-.popup{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);}
-.popupBox{padding:25px;border-radius:16px;color:#fff;width:80%;max-width:300px;}
-.green{background:#2ecc71;} .red{background:#e74c3c;} .purple{background:#9b59b6;}
+body{
+ margin:0;
+ font-family:'Segoe UI',system-ui;
+ background:radial-gradient(circle at top,#ffe29f,#ffa99f,#ff719a,#9b5cff);
+ min-height:100vh;
+ color:#2b143b;
+ text-align:center;
+}
+h1{
+ font-size:28px;
+ margin:15px;
+ text-shadow:0 0 8px rgba(255,255,255,0.7);
+}
+.card{
+ background:rgba(255,255,255,0.35);
+ backdrop-filter:blur(12px);
+ border-radius:18px;
+ padding:18px;
+ box-shadow:0 10px 25px rgba(0,0,0,0.2);
+ margin:10px;
+}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
+}
+button{
+ border:none;
+ padding:14px;
+ border-radius:14px;
+ font-size:15px;
+ color:#2b143b;
+ background:linear-gradient(135deg,#ffecd2,#fcb69f,#c2e9fb,#a1c4fd);
+ box-shadow:0 5px 12px rgba(0,0,0,0.25);
+}
+button:active{transform:scale(0.95);}
+.popup{
+ position:fixed;top:0;left:0;width:100%;height:100%;
+ display:none;align-items:center;justify-content:center;
+ background:rgba(0,0,0,0.6);
+}
+.popupBox{
+ padding:25px;border-radius:16px;color:#fff;width:80%;max-width:300px;
+ text-shadow:0 0 6px rgba(0,0,0,0.5);
+}
+.green{background:linear-gradient(135deg,#00f5a0,#00d9f5);}
+.red{background:linear-gradient(135deg,#ff4b2b,#ff416c);}
+.purple{background:linear-gradient(135deg,#b721ff,#21d4fd);}
 </style>
 </head>
 
 <body>
-<h1>📚 BAMS MCQ PRACTICE</h1>
 
-<div id="subjectBox">
-  <h3>Select Subject 👇</h3>
-  <div class="grid">
-    <button onclick="selectSubject('anatomy')">🦴 Anatomy (रचना शारीर)</button>
-    <button onclick="selectSubject('physiology')">❤️ Physiology (क्रिया शारीर)</button>
-    <button onclick="selectSubject('padarth')">📘 Padarth</button>
-    <button onclick="selectSubject('sanskrit')">🕉 Sanskrit</button>
-    <button onclick="selectSubject('samhita')">📜 Samhita</button>
-  </div>
+<h1>✨ AYURQUEST 🧠📚</h1>
+
+<div class="card" id="subjectBox">
+<h3>Choose Your Subject 🌿</h3>
+<div class="grid">
+<button onclick="selectSubject('anatomy')">🦴 Anatomy (रचना शारीर)</button>
+<button onclick="selectSubject('physiology')">❤️ Physiology (क्रिया शारीर)</button>
+<button onclick="selectSubject('padarth')">📘 पदार्थ विज्ञान</button>
+<button onclick="selectSubject('sanskrit')">🕉 संस्कृत</button>
+<button onclick="selectSubject('samhita')">📜 संहिता</button>
+</div>
 </div>
 
-<div id="partBox" style="display:none;">
-  <h3>Select Part 📖</h3>
-  <div class="grid">
-    <button onclick="selectPart('ayurvedic')">🌿 Ayurvedic</button>
-    <button onclick="selectPart('modern')">🔬 Modern</button>
-    <button onclick="selectPart('mixed')">🔀 Mixed</button>
-  </div>
+<div class="card" id="partBox" style="display:none;">
+<h3>Select Part 📖</h3>
+<div class="grid">
+<button onclick="selectPart('ayurvedic')">🌿 Ayurvedic</button>
+<button onclick="selectPart('modern')">🔬 Modern</button>
+<button onclick="selectPart('mixed')">🔀 Mixed</button>
+</div>
 </div>
 
-<div id="countBox" style="display:none;">
-  <h3>No. of MCQs 🤔</h3>
-  <div class="grid">
-    <button onclick="startQuiz(10)">10</button>
-    <button onclick="startQuiz(20)">20</button>
-    <button onclick="startQuiz(30)">30</button>
-    <button onclick="startQuiz(40)">40</button>
-    <button onclick="startQuiz(50)">50</button>
-  </div>
+<div class="card" id="countBox" style="display:none;">
+<h3>No. of MCQs 🤔</h3>
+<div class="grid">
+<button onclick="startQuiz(10)">10</button>
+<button onclick="startQuiz(20)">20</button>
+<button onclick="startQuiz(30)">30</button>
+<button onclick="startQuiz(40)">40</button>
+<button onclick="startQuiz(50)">50</button>
+</div>
 </div>
 
-<div id="quizBox" style="display:none;">
-  <h3 id="question"></h3>
-  <div id="options"></div>
-  <button onclick="nextQuestion()">Next ➡️</button>
+<div class="card" id="quizBox" style="display:none;">
+<h3 id="question"></h3>
+<div id="options"></div>
+<button onclick="nextQuestion()">Next ➡️</button>
 </div>
 
-<div id="endBox" style="display:none;">
-  <h3 id="scoreText"></h3>
-  <button onclick="restartQuiz()">🔁 Restart</button>
-  <button onclick="goHome()">🏠 Home</button>
+<div class="card" id="endBox" style="display:none;">
+<h3 id="scoreText"></h3>
+<button onclick="restartQuiz()">🔁 Restart</button>
+<button onclick="goHome()">🏠 Home</button>
 </div>
 
 <div class="popup" id="popup">
-  <div class="popupBox" id="popupBox">
-    <p id="popupText"></p>
-    <button onclick="closePopup()">OK</button>
-  </div>
+<div class="popupBox" id="popupBox">
+<p id="popupText"></p>
+<button onclick="closePopup()">OK</button>
+</div>
 </div>
 
 <script>
@@ -74,114 +116,48 @@ const data={
  anatomy:{
   ayurvedic:[
    {q:"शरीर कशापासून बनले आहे?",o:["दोष धातु मल","अग्नी","इंद्रिय","ओज"],a:0},
-   {q:"सप्तधातू किती?",o:["7","5","3","9"],a:0},
-   {q:"अस्थी धातू कोणत्या दोषाशी संबंधित?",o:["वात","पित्त","कफ","त्रिदोष"],a:0},
-   {q:"मेद धातूचा उपधातू कोणता?",o:["स्तन्य","रक्त","रस","अस्थी"],a:0},
-   {q:"मज्जा धातू कोणत्या धातूपासून तयार?",o:["अस्थी","मेद","मांस","रस"],a:0},
-   {q:"शुक्र धातूचा कार्य?",o:["प्रजनन","श्वसन","पचन","संचार"],a:0},
-   {q:"ओज कुठे असते?",o:["हृदय","यकृत","प्लीहा","मूत्राशय"],a:0},
-   {q:"त्रिदोषांचे मूळ स्थान?",o:["पाक्वाशय","हृदय","मस्तिष्क","नाभी"],a:0},
-   {q:"रस धातूचे कार्य?",o:["पोषण","बल","स्थैर्य","उष्णता"],a:0},
-   {q:"मल म्हणजे काय?",o:["अपशिष्ट","धातू","रस","अग्नी"],a:0}
+   {q:"धातू किती आहेत?",o:["7","5","3","10"],a:0},
+   {q:"त्रिदोष म्हणजे?",o:["वात पित्त कफ","रस रक्त","अग्नी","धातू"],a:0}
   ],
   modern:[
-   {q:"How many bones in human body?",o:["206","208","210","200"],a:0},
-   {q:"Scapula is?",o:["Flat","Long","Short","Irregular"],a:0},
-   {q:"Femur is?",o:["Long bone","Flat bone","Short bone","Irregular"],a:0},
-   {q:"Skull has how many bones?",o:["22","24","20","28"],a:0},
-   {q:"Vertebral column has?",o:["33","30","26","28"],a:0},
-   {q:"Humerus is of which limb?",o:["Upper","Lower","Head","Trunk"],a:0},
-   {q:"Radius is lateral in?",o:["Forearm","Arm","Leg","Thigh"],a:0},
-   {q:"Ulna is medial in?",o:["Forearm","Arm","Leg","Thigh"],a:0},
-   {q:"Patella is?",o:["Sesamoid","Flat","Long","Irregular"],a:0},
-   {q:"Ribs are?",o:["Flat bones","Long bones","Short bones","Irregular"],a:0}
+   {q:"How many bones?",o:["206","208","210","200"],a:0},
+   {q:"Longest bone?",o:["Femur","Humerus","Tibia","Ulna"],a:0},
+   {q:"Skull bones?",o:["22","20","24","26"],a:0}
   ],
   mixed:[
-   {q:"Bone is?",o:["Connective tissue","Muscle","Nerve","Gland"],a:0},
-   {q:"Asthi dhatu is?",o:["Bone tissue","Blood","Muscle","Fat"],a:0},
-   {q:"Skull protects?",o:["Brain","Heart","Lungs","Kidney"],a:0},
-   {q:"Vertebrae protect?",o:["Spinal cord","Heart","Lungs","Brain"],a:0},
-   {q:"Joint is?",o:["Articulation","Bone","Muscle","Nerve"],a:0},
-   {q:"Cartilage is?",o:["Flexible tissue","Hard bone","Nerve","Muscle"],a:0},
-   {q:"Long bones example?",o:["Femur","Scapula","Carpal","Tarsal"],a:0},
-   {q:"Flat bone example?",o:["Scapula","Femur","Radius","Ulna"],a:0},
-   {q:"Sesamoid bone?",o:["Patella","Scapula","Ulna","Radius"],a:0},
-   {q:"Axial skeleton includes?",o:["Skull & vertebrae","Limbs","Pelvis","Shoulder"],a:0}
+   {q:"Scapula is?",o:["Flat","Long","Short","Irregular"],a:0},
+   {q:"Heart is?",o:["Muscle","Bone","Nerve","Gland"],a:0},
+   {q:"Prana vayu is related to?",o:["Respiration","Digestion","Blood","Excretion"],a:0}
   ]
  },
  physiology:{
   ayurvedic:[
-   {q:"प्राणवायूचे कार्य?",o:["श्वसन","पचन","संचार","मलोत्सर्ग"],a:0},
-   {q:"समान वायूचे कार्य?",o:["पचन","श्वसन","उत्सर्जन","संचार"],a:0},
-   {q:"अपान वायूचे कार्य?",o:["मलोत्सर्ग","श्वसन","पचन","संचार"],a:0},
-   {q:"व्याण वायूचे कार्य?",o:["रक्तसंचार","पचन","श्वसन","उत्सर्जन"],a:0},
-   {q:"उदान वायूचे कार्य?",o:["वाणी","श्वसन","पचन","मल"],a:0},
-   {q:"जठराग्नीचे कार्य?",o:["पचन","श्वसन","संचार","उत्सर्जन"],a:0},
-   {q:"धात्वाग्नीचे कार्य?",o:["रूपांतरण","पचन","उत्सर्जन","श्वसन"],a:0},
-   {q:"रस धातूचे कार्य?",o:["पोषण","बल","स्थैर्य","उष्णता"],a:0},
-   {q:"ओजचे कार्य?",o:["बल","पचन","श्वसन","उत्सर्जन"],a:0},
-   {q:"सत्त्व गुण म्हणजे?",o:["शुद्धता","क्रिया","तमस","रजस"],a:0}
+   {q:"प्राणवायूचे कार्य?",o:["श्वसन","पचन","रक्त","मल"],a:0},
+   {q:"समान वायूचे कार्य?",o:["पचन","श्वसन","रक्त","मल"],a:0},
+   {q:"अपान वायूचे कार्य?",o:["मलमूत्र विसर्जन","श्वसन","हृदय","पचन"],a:0}
   ],
   modern:[
-   {q:"Normal pulse rate?",o:["60-100","40-60","100-120","30-50"],a:0},
-   {q:"Normal body temperature?",o:["37°C","35°C","39°C","33°C"],a:0},
-   {q:"Heart is?",o:["Pump","Gland","Bone","Nerve"],a:0},
-   {q:"RBC life span?",o:["120 days","90 days","60 days","30 days"],a:0},
-   {q:"Normal BP?",o:["120/80","100/70","140/90","90/60"],a:0},
-   {q:"Lungs function?",o:["Respiration","Digestion","Circulation","Excretion"],a:0},
-   {q:"Kidney function?",o:["Excretion","Digestion","Respiration","Movement"],a:0},
-   {q:"Brain controls?",o:["Body","Only heart","Only lungs","Only kidney"],a:0},
-   {q:"Blood pH?",o:["7.35-7.45","6.8","8.0","7.0"],a:0},
-   {q:"Platelets function?",o:["Clotting","Oxygen","Immunity","Nutrition"],a:0}
+   {q:"Normal pulse?",o:["60-100","40-60","100-120","30-50"],a:0},
+   {q:"Normal BP?",o:["120/80","140/90","90/60","100/70"],a:0},
+   {q:"RBC life?",o:["120 days","90","60","30"],a:0}
   ],
   mixed:[
-   {q:"Respiration is?",o:["Gas exchange","Digestion","Excretion","Movement"],a:0},
-   {q:"Circulation is?",o:["Blood flow","Breathing","Digestion","Excretion"],a:0},
-   {q:"Digestion occurs in?",o:["Stomach","Heart","Lungs","Brain"],a:0},
-   {q:"Excretion removes?",o:["Waste","Oxygen","Food","Heat"],a:0},
-   {q:"Homeostasis means?",o:["Balance","Growth","Movement","Heat"],a:0},
-   {q:"Pulse indicates?",o:["Heart rate","Lung rate","Kidney rate","Brain rate"],a:0},
-   {q:"Urine formed in?",o:["Kidney","Liver","Heart","Lung"],a:0},
-   {q:"Oxygen carried by?",o:["Hemoglobin","Plasma","Platelet","WBC"],a:0},
-   {q:"CO2 removed by?",o:["Lungs","Kidney","Liver","Skin"],a:0},
-   {q:"Energy produced by?",o:["ATP","DNA","RNA","Protein"],a:0}
+   {q:"Heart is?",o:["Pump","Bone","Nerve","Gland"],a:0},
+   {q:"Respiration is?",o:["Energy","Growth","Excretion","Movement"],a:0},
+   {q:"Oxygen binds with?",o:["Hemoglobin","Plasma","Platelet","WBC"],a:0}
   ]
  },
  padarth:{all:[
-  {q:"त्रिदोष म्हणजे कोणते?",o:["वात पित्त कफ","रस रक्त","अग्नी","धातू"],a:0},
-  {q:"सप्तधातू किती?",o:["7","5","3","9"],a:0},
-  {q:"पंचमहाभूत म्हणजे?",o:["पृथ्वी आप तेज वायु आकाश","वात पित्त कफ","रस रक्त","अग्नी"],a:0},
-  {q:"अग्नीचे प्रकार किती?",o:["13","5","7","3"],a:0},
-  {q:"ओजचे कार्य?",o:["बल","पचन","श्वसन","मल"],a:0},
-  {q:"सत्त्व गुण म्हणजे?",o:["शुद्धता","रजस","तमस","क्रिया"],a:0},
-  {q:"दोषांची संख्या?",o:["3","5","7","9"],a:0},
-  {q:"धातू म्हणजे?",o:["शरीर घटक","अपशिष्ट","अग्नी","वायू"],a:0},
-  {q:"मल म्हणजे?",o:["अपशिष्ट","धातू","रस","अग्नी"],a:0},
-  {q:"प्रकृतीचे प्रकार?",o:["वात पित्त कफ","रस रक्त","अग्नी","धातू"],a:0}
+  {q:"त्रिदोष कोणते?",o:["वात पित्त कफ","रस रक्त","धातू","अग्नी"],a:0},
+  {q:"पंचमहाभूत?",o:["पृथ्वी आप तेज वायु आकाश","दोष","धातू","मल"],a:0}
  ]},
  sanskrit:{all:[
-  {q:"रामः हा कोणता विभक्ती आहे?",o:["प्रथमा","द्वितीया","षष्ठी","सप्तमी"],a:0},
-  {q:"फलम् शब्दाचा लिंग?",o:["नपुंसक","पुं","स्त्री","उभय"],a:0},
-  {q:"गच्छति धातू कोणत्या लकारात?",o:["लट्","लृट्","लोट्","विधिलिङ्"],a:0},
-  {q:"अहम् हा कोणता पुरुष?",o:["उत्तम","मध्यम","प्रथम","उभय"],a:0},
-  {q:"सः हा कोणता लिंग?",o:["पुं","स्त्री","नपुंसक","उभय"],a:0},
-  {q:"बालकः शब्दाचा लिंग?",o:["पुं","स्त्री","नपुंसक","उभय"],a:0},
-  {q:"पठति म्हणजे?",o:["वाचतो","खातो","जातो","झोपतो"],a:0},
-  {q:"ग्रामः हा कोणता विभक्ती?",o:["प्रथमा","द्वितीया","तृतीया","षष्ठी"],a:0},
-  {q:"वदति म्हणजे?",o:["बोलतो","खातो","जातो","पितो"],a:0},
-  {q:"माता हा कोणता लिंग?",o:["स्त्री","पुं","नपुंसक","उभय"],a:0}
+  {q:"रामः कोणती विभक्ती?",o:["प्रथमा","द्वितीया","षष्ठी","सप्तमी"],a:0},
+  {q:"फलम् किम्?",o:["नाम","क्रियापद","विशेषण","अव्यय"],a:0}
  ]},
  samhita:{all:[
-  {q:"चरकसंहिता कोणत्या शाखेशी संबंधित आहे?",o:["कायचिकित्सा","शल्य","शालाक्य","अगद"],a:0},
-  {q:"सुश्रुतसंहिता कोणत्या शाखेची?",o:["शल्य","काय","बाल","अगद"],a:0},
-  {q:"अष्टांगहृदय कोणी लिहिले?",o:["वाग्भट","चरक","सुश्रुत","काश्यप"],a:0},
-  {q:"कायचिकित्सा म्हणजे?",o:["आंतरिक चिकित्सा","शस्त्रक्रिया","नेत्ररोग","विषचिकित्सा"],a:0},
-  {q:"दोषांचे मूळ स्थान?",o:["पाक्वाशय","हृदय","मस्तिष्क","नाभी"],a:0},
-  {q:"रस धातूचे कार्य?",o:["पोषण","बल","स्थैर्य","उष्णता"],a:0},
-  {q:"ओजचे स्थान?",o:["हृदय","यकृत","प्लीहा","मूत्राशय"],a:0},
-  {q:"त्रिदोष संतुलन म्हणजे?",o:["आरोग्य","रोग","मृत्यू","दुःख"],a:0},
-  {q:"शल्य म्हणजे?",o:["शस्त्रक्रिया","आंतरिक चिकित्सा","नेत्ररोग","विष"],a:0},
-  {q:"शालाक्य म्हणजे?",o:["नेत्र व कर्ण","आंतरिक","बाल","विष"],a:0}
+  {q:"चरकसंहिता शाखा?",o:["कायचिकित्सा","शल्य","शालाक्य","अगद"],a:0},
+  {q:"सुश्रुत संहिता?",o:["शल्य","काय","बाल","अगद"],a:0}
  ]}
 };
 
@@ -190,14 +166,56 @@ let subject="",part="",questions=[],index=0,score=0,lastCount=0,answered=false;
 function hideAll(){["subjectBox","partBox","countBox","quizBox","endBox"].forEach(id=>document.getElementById(id).style.display="none");}
 function selectSubject(s){subject=s;hideAll();if(s==="anatomy"||s==="physiology")document.getElementById("partBox").style.display="block";else{part="all";document.getElementById("countBox").style.display="block";}}
 function selectPart(p){part=p;hideAll();document.getElementById("countBox").style.display="block";}
-function startQuiz(n){lastCount=n;questions=data[subject][part].slice(0,n);index=0;score=0;answered=false;hideAll();document.getElementById("quizBox").style.display="block";showQuestion();}
-function showQuestion(){answered=false;let q=questions[index];document.getElementById("question").innerText=q.q;let opt=document.getElementById("options");opt.innerHTML="";q.o.forEach((op,i)=>{let b=document.createElement("button");b.innerText=op;b.onclick=()=>check(i);opt.appendChild(b);});}
-function showPopup(msg,color){let p=document.getElementById("popup");let box=document.getElementById("popupBox");let txt=document.getElementById("popupText");box.className="popupBox "+color;txt.innerHTML=msg;p.style.display="flex";}
+function startQuiz(n){
+ lastCount=n;
+ questions=[...data[subject][part]];
+ questions=questions.sort(()=>0.5-Math.random()).slice(0,n);
+ index=0;score=0;answered=false;
+ hideAll();document.getElementById("quizBox").style.display="block";
+ showQuestion();
+}
+function showQuestion(){
+ answered=false;
+ let q=questions[index];
+ document.getElementById("question").innerText=q.q;
+ let opt=document.getElementById("options");opt.innerHTML="";
+ q.o.forEach((op,i)=>{
+  let b=document.createElement("button");
+  b.innerText=op;
+  b.onclick=()=>check(i);
+  opt.appendChild(b);
+ });
+}
+function showPopup(msg,color){
+ let p=document.getElementById("popup");
+ let box=document.getElementById("popupBox");
+ let txt=document.getElementById("popupText");
+ box.className="popupBox "+color;
+ txt.innerHTML=msg;
+ p.style.display="flex";
+}
 function closePopup(){document.getElementById("popup").style.display="none";}
-function check(i){if(answered)return;answered=true;let q=questions[index];if(i===q.a){score++;showPopup("✅ Correct!","green");}else{showPopup("❌ Wrong!<br>Correct: "+q.o[q.a],"red");}}
-function nextQuestion(){let q=questions[index];if(!answered){showPopup("⏭ Skipped!<br>Correct: "+q.o[q.a],"purple");}index++;if(index<questions.length)showQuestion();else{hideAll();document.getElementById("endBox").style.display="block";document.getElementById("scoreText").innerText=`🎯 Score: ${score}/${questions.length}`;}}
+function check(i){
+ if(answered) return;
+ answered=true;
+ let q=questions[index];
+ if(i===q.a){score++;showPopup("✅ Correct!","green");}
+ else showPopup("❌ Wrong!<br>Correct: "+q.o[q.a],"red");
+}
+function nextQuestion(){
+ let q=questions[index];
+ if(!answered) showPopup("⏭ Skipped!<br>Correct: "+q.o[q.a],"purple");
+ index++;
+ if(index<questions.length) showQuestion();
+ else{
+  hideAll();
+  document.getElementById("endBox").style.display="block";
+  document.getElementById("scoreText").innerText=`🎯 Score: ${score}/${questions.length}`;
+ }
+}
 function restartQuiz(){startQuiz(lastCount);}
 function goHome(){hideAll();document.getElementById("subjectBox").style.display="block";}
 </script>
+
 </body>
 </html>
