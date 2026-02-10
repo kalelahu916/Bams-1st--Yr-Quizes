@@ -4,43 +4,136 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MCQ अभ्यास 🧠🕉️ - आयुर्वेद विद्यार्थींसाठी</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
-    body { font-family: 'Poppins', sans-serif; background: linear-gradient(to bottom, #e0f7fa, #ffffff); margin:0; padding:20px; color:#333; }
-    .container { max-width:800px; margin:auto; background:white; padding:30px; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.1); text-align:center; }
-    h1, h2, h3 { color:#00695c; }
-    .subjects { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:15px; margin:30px 0; }
-    button { background:#009688; color:white; border:none; padding:15px 25px; margin:10px; font-size:18px; border-radius:10px; cursor:pointer; transition:0.3s; }
-    button:hover { background:#00796b; transform:scale(1.05); }
-    .progress { font-size:20px; margin:20px 0; color:#555; }
-    #options div { margin:15px 0; font-size:18px; text-align:left; max-width:550px; margin-left:auto; margin-right:auto; }
-    input[type="radio"] { margin-right:12px; transform:scale(1.4); }
-    #next-btn { margin-top:30px; padding:15px 50px; font-size:20px; }
-    #result-screen h2 { font-size:2.8em; }
-    #result-screen p { font-size:1.5em; margin:20px 0; }
-    .restart-buttons button { background:#ff5722; font-size:20px; padding:15px 40px; }
-    .restart-buttons button.home { background:#607d8b; }
-    .count-buttons button { background:#4caf50; }
-    .count-buttons button:hover { background:#388e3c; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f4c5c, #1d3557);
+      color: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 850px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.97);
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    h1 {
+      color: #264653;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+    h2, h3 {
+      color: #2a9d8f;
+    }
+    .subjects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin: 35px 0;
+    }
+    button {
+      background: linear-gradient(45deg, #4361ee, #3f37c9);
+      color: white;
+      border: none;
+      padding: 16px 30px;
+      font-size: 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(67,97,238,0.4);
+    }
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(67,97,238,0.6);
+    }
+    .count-buttons button {
+      background: linear-gradient(45deg, #2a9d8f, #168a78);
+      box-shadow: 0 4px 15px rgba(42,157,143,0.4);
+    }
+    .count-buttons button:hover {
+      box-shadow: 0 8px 25px rgba(42,157,143,0.6);
+    }
+    .start-btn {
+      background: linear-gradient(45deg, #f4a261, #e76f51);
+      font-size: 24px;
+      padding: 20px 70px;
+      box-shadow: 0 6px 20px rgba(244,162,97,0.5);
+    }
+    .restart-buttons button {
+      background: linear-gradient(45deg, #e63946, #d00000);
+      margin: 15px;
+      font-size: 20px;
+      padding: 16px 45px;
+    }
+    .restart-buttons .home {
+      background: linear-gradient(45deg, #457b9d, #1d3557);
+    }
+    .progress {
+      font-size: 22px;
+      margin: 25px 0;
+      color: #2a9d8f;
+    }
+    #options div {
+      margin: 18px 0;
+      font-size: 19px;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      background: #f1faee;
+      padding: 12px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    input[type="radio"] {
+      margin-right: 15px;
+      transform: scale(1.5);
+    }
+    #next-btn {
+      margin-top: 35px;
+      padding: 18px 60px;
+      font-size: 22px;
+    }
+    #result-screen h2 {
+      font-size: 3em;
+      color: #264653;
+    }
+    #score-display {
+      font-size: 2em;
+      margin: 20px 0;
+      color: #2a9d8f;
+    }
+    #motivation-msg {
+      font-size: 1.8em;
+      font-weight: 600;
+      color: #e63946;
+      margin: 25px 0;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>MCQ अभ्यास 🩺📚🕉️<br>आयुर्वेद आणि BAMS विद्यार्थींसाठी</h1>
+    <h1>MCQ अभ्यास 🩺📚🕉️<br>आयुर्वेद विद्यार्थींसाठी</h1>
     
     <!-- Subject Selection -->
     <div id="subject-screen">
       <h2>विषय निवडा 🔍</h2>
       <div class="subjects">
-        <button onclick="selectSubject('anatomy')">Anatomy (रचना शारीर) 🦴</button>
-        <button onclick="selectSubject('kriya')">Physiology (क्रिया शारीर) ❤️</button>
+        <button onclick="selectSubject('anatomy')">रचना शारीर 🦴</button>
+        <button onclick="selectSubject('kriya')">क्रिया शारीर ❤️</button>
         <button onclick="selectSubject('padarth')">पदार्थ विज्ञान ⚛️</button>
         <button onclick="selectSubject('sanskrit')">संस्कृत 🗣️</button>
         <button onclick="selectSubject('samhita')">संहिता 📜</button>
       </div>
     </div>
     
-    <!-- Sub-Selection ONLY for Rachana & Kriya -->
+    <!-- Sub-Selection for Rachana & Kriya -->
     <div id="sub-screen" style="display:none;">
       <h2 id="sub-title"></h2>
       <div class="subjects">
@@ -50,10 +143,10 @@
       </div>
     </div>
     
-    <!-- Number of Questions (buttons) -->
+    <!-- Number of Questions -->
     <div id="num-screen" style="display:none;">
       <h2 id="subject-title"></h2>
-      <h3>किती MCQ हवे? 🔢</h3>
+      <h3>किती प्रश्न हवे? 🔢</h3>
       <div class="subjects count-buttons">
         <button onclick="setCount(10)">१० प्रश्न ⚡</button>
         <button onclick="setCount(20)">२० प्रश्न 🔥</button>
@@ -62,7 +155,7 @@
         <button onclick="setCount(50)">५० प्रश्न 🌟</button>
       </div>
       <br>
-      <button onclick="startQuiz()" style="background:#ff5722; font-size:22px; padding:18px 60px;">क्विझ सुरू करा! 🎯</button>
+      <button class="start-btn" onclick="startQuiz()">क्विझ सुरू करा! 🎯</button>
     </div>
     
     <!-- Quiz Screen -->
@@ -77,7 +170,7 @@
     <div id="result-screen" style="display:none;">
       <h2>क्विझ संपले! 🏁🥳</h2>
       <p id="score-display"></p>
-      <p id="motivation-msg" style="font-size:1.6em; font-weight:bold; margin:20px 0;"></p>
+      <p id="motivation-msg"></p>
       <div class="restart-buttons">
         <button onclick="restartSameQuiz()">Same Quiz Restart 🔄</button>
         <button class="home" onclick="restart()">Homepage 🏠</button>
@@ -102,37 +195,102 @@
     let currentIndex = 0;
     let score = 0;
 
-    // Questions (same as before, abbreviated for brevity)
+    // Rachana Ayurvedic (Marathi) - 10 questions
     allQuestions.anatomyAyurvedic = [
-      { question: "रचना शारीरानुसार शरीरातील सात धातू कोणते?", options: ["रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र", "वात, पित्त, कफ", "अग्नी, ओजस", "सत्व, रज, तम"], answer: "रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र" },
-      { question: "अस्थी धातूचे मुख्य स्थान कोणते?", options: ["हाडे", "त्वचा", "रक्त", "मांसपेशी"], answer: "हाडे" }
+      { question: "रचना शारीरानुसार शरीरातील सात धातू कोणते?", options: ["रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र", "वात, पित्त, कफ", "अग्नी, ओजस, तेजस", "सत्व, रज, तम"], answer: "रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र" },
+      { question: "अस्थी धातूचे मुख्य स्थान कोणते?", options: ["हाडे", "त्वचा", "रक्त", "मांसपेशी"], answer: "हाडे" },
+      { question: "शरीरातील सर्वात लांब हाड कोणती?", options: ["फेमर", "टिबिया", "ह्यूमरस", "कवटी"], answer: "फेमर" },
+      { question: "मानवी शरीरात एकूण किती हाडे असतात?", options: ["२०६", "२१०", "१९८", "२२०"], answer: "२०६" },
+      { question: "हृदयाचे किती कप्पे असतात?", options: ["४", "३", "२", "५"], answer: "४" },
+      { question: "सर्वात मोठा अवयव कोणता?", options: ["त्वचा", "यकृत", "फुफ्फुसे", "मेंदू"], answer: "त्वचा" },
+      { question: "मेंदूचे संरक्षक आवरण काय?", options: ["मेनिंजेस", "पेरिकार्डियम", "प्ल्युरा", "पेरिटोनियम"], answer: "मेनिंजेस" },
+      { question: "घुटण्याचे संयुक्त कोणते प्रकारचे?", options: ["हिंज जॉइंट", "बॉल अँड सॉकेट", "पिव्होट", "ग्लायडिंग"], answer: "हिंज जॉइंट" },
+      { question: "डोळ्याचा रंग ठरवणारा भाग?", options: ["आयरिस", "कॉर्निया", "रेटिना", "लेंस"], answer: "आयरिस" },
+      { question: "मानवी शरीरातील सर्वात लहान हाड कोणते?", options: ["स्टेप्स", "फेमर", "टिबिया", "रेडियस"], answer: "स्टेप्स" }
     ];
 
+    // Rachana Modern (English) - 10 questions
     allQuestions.anatomyModern = [
       { question: "How many bones are in the adult human body?", options: ["206", "208", "210", "212"], answer: "206" },
-      { question: "What is the longest bone in the human body?", options: ["Femur", "Tibia", "Humerus", "Fibula"], answer: "Femur" }
+      { question: "What is the longest bone in the human body?", options: ["Femur", "Tibia", "Humerus", "Fibula"], answer: "Femur" },
+      { question: "How many chambers are in the human heart?", options: ["2", "3", "4", "5"], answer: "4" },
+      { question: "What is the largest organ in the human body?", options: ["Skin", "Liver", "Lungs", "Heart"], answer: "Skin" },
+      { question: "What is the protective covering of the brain?", options: ["Meninges", "Pericardium", "Pleura", "Peritoneum"], answer: "Meninges" },
+      { question: "What type of joint is the knee?", options: ["Hinge joint", "Ball and socket", "Pivot", "Gliding"], answer: "Hinge joint" },
+      { question: "Which part of the eye determines its color?", options: ["Iris", "Cornea", "Retina", "Lens"], answer: "Iris" },
+      { question: "What is the smallest bone in the human body?", options: ["Stapes", "Femur", "Tibia", "Radius"], answer: "Stapes" },
+      { question: "How many pairs of ribs are there in humans?", options: ["12", "10", "14", "11"], answer: "12" },
+      { question: "What is the functional unit of bone?", options: ["Osteon", "Nephron", "Neuron", "Alveoli"], answer: "Osteon" }
     ];
 
+    // Kriya Ayurvedic (Marathi) - 10 questions
     allQuestions.kriyaAyurvedic = [
       { question: "त्रिदोष कोणते?", options: ["वात, पित्त, कफ", "रक्त, मांस, अस्थी", "अग्नी, ओजस, तेजस", "सत्व, रज, तम"], answer: "वात, पित्त, कफ" },
-      { question: "अग्नीचे मुख्य कार्य काय?", options: ["पचन आणि रूपांतर", "श्वसन", "रक्ताभिसरण", "हाड मजबूत करणे"], answer: "पचन आणि रूपांतर" }
+      { question: "अग्नीचे मुख्य कार्य काय?", options: ["पचन आणि रूपांतर", "श्वसन", "रक्ताभिसरण", "हाड मजबूत करणे"], answer: "पचन आणि रूपांतर" },
+      { question: "ओजस म्हणजे काय?", options: ["रोगप्रतिकारक शक्ती आणि जीवनशक्ती", "विष", "कचरा", "वेदना"], answer: "रोगप्रतिकारक शक्ती आणि जीवनशक्ती" },
+      { question: "धातू किती प्रकारचे?", options: ["७", "५", "३", "९"], answer: "७" },
+      { question: "वात दोषाचे मुख्य गुण?", options: ["रूक्ष, लघु, शीत", "स्निग्ध, गुरु, उष्ण", "मंद, स्थिर", "तीक्ष्ण, द्रव"], answer: "रूक्ष, लघु, शीत" },
+      { question: "पित्त दोषाचे मुख्य गुण?", options: ["उष्ण, तीक्ष्ण, द्रव", "रूक्ष, शीत", "गुरु, मंद", "लघु, स्थिर"], answer: "उष्ण, तीक्ष्ण, द्रव" },
+      { question: "कफ दोषाचे मुख्य गुण?", options: ["स्निग्ध, गुरु, शीत", "रूक्ष, लघु", "तीक्ष्ण, उष्ण", "द्रव, मंद"], answer: "स्निग्ध, गुरु, शीत" },
+      { question: "प्राण वायूचे मुख्य कार्य?", options: ["श्वसन आणि हृदयाचे कार्य", "पचन", "उत्सर्जन", "रक्त निर्मिती"], answer: "श्वसन आणि हृदयाचे कार्य" },
+      { question: "समाना वायूचे कार्य?", options: ["पचन आणि अवशोषण", "श्वसन", "उत्सर्जन", "रक्ताभिसरण"], answer: "पचन आणि अवशोषण" },
+      { question: "अपाना वायूचे कार्य?", options: ["मल-मूत्र उत्सर्जन", "पचन", "श्वसन", "रक्त निर्मिती"], answer: "मल-मूत्र उत्सर्जन" }
     ];
 
+    // Kriya Modern (English) - 10 questions
     allQuestions.kriyaModern = [
       { question: "What is the normal human body temperature?", options: ["37°C", "36°C", "38°C", "35°C"], answer: "37°C" },
-      { question: "Insulin hormone is secreted by which gland?", options: ["Pancreas", "Thyroid", "Adrenal", "Pituitary"], answer: "Pancreas" }
+      { question: "Insulin hormone is secreted by which gland?", options: ["Pancreas", "Thyroid", "Adrenal", "Pituitary"], answer: "Pancreas" },
+      { question: "Main function of Red Blood Cells (RBCs)?", options: ["Oxygen transport", "Immunity", "Blood clotting", "Digestion"], answer: "Oxygen transport" },
+      { question: "Functional unit of kidney?", options: ["Nephron", "Neuron", "Alveoli", "Osteon"], answer: "Nephron" },
+      { question: "Breathing rate is controlled by which part of brain?", options: ["Medulla oblongata", "Cerebellum", "Hypothalamus", "Cerebrum"], answer: "Medulla oblongata" },
+      { question: "What is the role of hemoglobin?", options: ["Carry oxygen", "Fight infection", "Clot blood", "Digest food"], answer: "Carry oxygen" },
+      { question: "Which hormone regulates blood sugar?", options: ["Insulin", "Adrenaline", "Thyroxine", "Cortisol"], answer: "Insulin" },
+      { question: "What is the pH of human blood?", options: ["7.4", "7.0", "6.8", "7.8"], answer: "7.4" },
+      { question: "Main function of platelets?", options: ["Blood clotting", "Oxygen transport", "Immunity", "Digestion"], answer: "Blood clotting" },
+      { question: "Which organ produces bile?", options: ["Liver", "Pancreas", "Kidney", "Stomach"], answer: "Liver" }
     ];
 
+    // Padarth Vigyan - Marathi - 10 questions
     allQuestions.padarth = [
-      { question: "न्याय दर्शनानुसार पदार्थ किती?", options: ["७", "६", "९", "१६"], answer: "७" }
+      { question: "न्याय दर्शनानुसार पदार्थ किती?", options: ["७", "६", "९", "१६"], answer: "७" },
+      { question: "'द्रव्य' म्हणजे?", options: ["पदार्थ किंवा वस्तू", "गुण", "कर्म", "सामान्यता"], answer: "पदार्थ किंवा वस्तू" },
+      { question: "पंचमहाभूत किती?", options: ["५", "४", "३", "६"], answer: "५" },
+      { question: "गुण किती प्रकारचे?", options: ["२०", "१०", "५", "२५"], answer: "२०" },
+      { question: "कर्म म्हणजे?", options: ["कार्य किंवा क्रिया", "नित्यत्व", "अभाव", "विशेष"], answer: "कार्य किंवा क्रिया" },
+      { question: "समन्वय म्हणजे?", options: ["सामान्य", "विशेष", "अभाव", "द्रव्य"], answer: "सामान्य" },
+      { question: "विशेष म्हणजे?", options: ["विशिष्ट गुण", "सामान्य", "क्रिया", "द्रव्य"], answer: "विशिष्ट गुण" },
+      { question: "अभाव म्हणजे?", options: ["नाही असणे", "अस्तित्व", "गुण", "कर्म"], answer: "नाही असणे" },
+      { question: "द्रव्याचे किती प्रकार?", options: ["९", "७", "५", "११"], answer: "९" },
+      { question: "आकाश, वायू, तेज, जल, पृथ्वी हे काय?", options: ["पंचमहाभूत", "त्रिदोष", "धातू", "गुण"], answer: "पंचमहाभूत" }
     ];
 
+    // Sanskrit - Marathi - 10 questions
     allQuestions.sanskrit = [
-      { question: "'आयुर्वेद' चा अर्थ?", options: ["जीवन विज्ञान", "औषधी ज्ञान", "रोग अभ्यास", "योग सराव"], answer: "जीवन विज्ञान" }
+      { question: "'आयुर्वेद' चा अर्थ?", options: ["जीवन विज्ञान", "औषधी ज्ञान", "रोग अभ्यास", "योग सराव"], answer: "जीवन विज्ञान" },
+      { question: "'स्वास्थ्य' म्हणजे?", options: ["आरोग्य", "रोग", "औषध", "अन्न"], answer: "आरोग्य" },
+      { question: "'दोष' चा अर्थ?", options: ["असंतुलन कारक", "संतुलन", "ऊर्जा", "महाभूत"], answer: "असंतुलन कारक" },
+      { question: "चरक संहिता कोणत्या भाषेत?", options: ["संस्कृत", "प्राकृत", "पाली", "तमिळ"], answer: "संस्कृत" },
+      { question: "'अग्नी' चा अर्थ?", options: ["पचन अग्नी", "पाणी", "वायू", "पृथ्वी"], answer: "पचन अग्नी" },
+      { question: "'ओजस' म्हणजे?", options: ["जीवनशक्ती", "विष", "कचरा", "वेदना"], answer: "जीवनशक्ती" },
+      { question: "'वात' चा अर्थ?", options: ["हवा/वायू", "पित्त", "कफ", "रक्त"], answer: "हवा/वायू" },
+      { question: "'पित्त' चा अर्थ?", options: ["अग्नी/उष्णता", "वायू", "कफ", "जल"], answer: "अग्नी/उष्णता" },
+      { question: "'कफ' चा अर्थ?", options: ["श्लेष्मा/पाणी", "वायू", "अग्नी", "रक्त"], answer: "श्लेष्मा/पाणी" },
+      { question: "'सुश्रुत संहिता' मुख्य विषय?", options: ["शल्यचिकित्सा", "कायचिकित्सा", "कौमारभृत्य", "अगदतंत्र"], answer: "शल्यचिकित्सा" }
     ];
 
+    // Samhita - Marathi - 10 questions
     allQuestions.samhita = [
-      { question: "चरक संहिता मुख्य विषय?", options: ["कायचिकित्सा", "शल्य", "कौमारभृत्य", "अगदतंत्र"], answer: "कायचिकित्सा" }
+      { question: "चरक संहिता मुख्य विषय?", options: ["कायचिकित्सा", "शल्य", "कौमारभृत्य", "अगदतंत्र"], answer: "कायचिकित्सा" },
+      { question: "हितायू चे मूल?", options: ["आरोग्य", "धर्म", "अर्थ", "काम"], answer: "आरोग्य" },
+      { question: "त्रिमर्म किती?", options: ["३", "५", "७", "९"], answer: "३" },
+      { question: "स्नेहन चा मुख्य उद्देश?", options: ["वात शमन", "पित्त शमन", "कफ शमन", "रक्त शुद्धी"], answer: "वात शमन" },
+      { question: "अष्टांग आयुर्वेदात किती अंग?", options: ["८", "६", "१०", "४"], answer: "८" },
+      { question: "लंघन म्हणजे?", options: ["हलके उपचार किंवा उपवास", "जड अन्न", "तेल मालिश", "रक्तस्राव"], answer: "हलके उपचार किंवा उपवास" },
+      { question: "चरक संहिता कोणी लिहिली?", options: ["चरक", "सुश्रुत", "वाग्भट", "काश्यप"], answer: "चरक" },
+      { question: "सुश्रुत संहिता कोणत्या विषयावर?", options: ["शल्यचिकित्सा", "कायचिकित्सा", "बालरोग", "विषचिकित्सा"], answer: "शल्यचिकित्सा" },
+      { question: "अष्टांग हृदय कोणी लिहिले?", options: ["वाग्भट", "चरक", "सुश्रुत", "काश्यप"], answer: "वाग्भट" },
+      { question: "आयुर्वेदाचे मूलभूत सिद्धांत?", options: ["त्रिदोष", "त्रिमर्म", "सप्तधातू", "सर्व वरील"], answer: "सर्व वरील" }
     ];
 
     function selectSubject(subject) {
@@ -262,30 +420,4 @@
       document.getElementById('quiz-screen').style.display = 'block';
       currentIndex = 0;
       score = 0;
-      // Re-shuffle and re-select questions (same count)
-      let subjectQs = [];
-      if (currentSubject === 'anatomy' || currentSubject === 'kriya') {
-        let ayurKey = currentSubject + 'Ayurvedic';
-        let modKey = currentSubject + 'Modern';
-        if (currentPart === 'ayurvedic') subjectQs = allQuestions[ayurKey];
-        else if (currentPart === 'modern') subjectQs = allQuestions[modKey];
-        else subjectQs = [...allQuestions[ayurKey], ...allQuestions[modKey]];
-      } else {
-        subjectQs = allQuestions[currentSubject] || [];
-      }
-      questions = [...subjectQs].sort(() => Math.random() - 0.5).slice(0, Math.min(selectedNum, subjectQs.length));
-      loadQuestion();
-    }
-
-    function restart() {
-      document.getElementById('result-screen').style.display = 'none';
-      document.getElementById('subject-screen').style.display = 'block';
-      document.getElementById('sub-screen').style.display = 'none';
-      currentSubject = '';
-      currentPart = '';
-      questions = [];
-      score = 0;
-    }
-  </script>
-</body>
-  </html>
+      // Re-shuffl
