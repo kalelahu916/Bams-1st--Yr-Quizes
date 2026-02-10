@@ -53,15 +53,27 @@
     button[data-subject="samhita"] { background: #e67e22; color: white; }
     button[data-subject="samhita"]:hover { background: #d35400; }
 
-    /* Sub-selection buttons - black text */
-    #sub-screen button:nth-child(1) { background: #a8dadc; color: #000000; font-weight: 600; }
-    #sub-screen button:nth-child(1):hover { background: #81d4fa; }
+    /* Sub-selection buttons - attractive backgrounds */
+    #sub-screen button:nth-child(1) { 
+      background: linear-gradient(45deg, #4caf50, #66bb6a); 
+      color: #000000;
+      font-weight: 600;
+    }
+    #sub-screen button:nth-child(1):hover { background: linear-gradient(45deg, #43a047, #5cb85c); }
 
-    #sub-screen button:nth-child(2) { background: #457b9d; color: #000000; font-weight: 600; }
-    #sub-screen button:nth-child(2):hover { background: #1d3557; }
+    #sub-screen button:nth-child(2) { 
+      background: linear-gradient(45deg, #00acc1, #26c6da); 
+      color: #000000;
+      font-weight: 600;
+    }
+    #sub-screen button:nth-child(2):hover { background: linear-gradient(45deg, #0097a7, #00bcd4); }
 
-    #sub-screen button:nth-child(3) { background: linear-gradient(45deg, #6d597a, #b56576); color: #000000; font-weight: 600; }
-    #sub-screen button:nth-child(3):hover { background: linear-gradient(45deg, #5a4a66, #9d4f61); }
+    #sub-screen button:nth-child(3) { 
+      background: linear-gradient(45deg, #ff7043, #ab47bc); 
+      color: #000000;
+      font-weight: 600;
+    }
+    #sub-screen button:nth-child(3):hover { background: linear-gradient(45deg, #f4511e, #8e24aa); }
 
     .count-buttons button { background: linear-gradient(45deg, #2a9d8f, #168a78); color: white; }
     .count-buttons button:hover { background: linear-gradient(45deg, #1e8c7d, #127a68); }
@@ -75,13 +87,14 @@
       margin-top: 35px; 
       padding: 18px 60px; 
       font-size: 22px; 
-      background: linear-gradient(45deg, #ff6b6b, #ee5253); /* Vibrant red-orange */
-      color: #000000 !important; /* Black text */
+      background: linear-gradient(45deg, #ff9f1c, #ff6b35); 
+      color: #000000 !important; 
       font-weight: 600;
     }
-    #next-btn:hover { background: linear-gradient(45deg, #ff5252, #d32f2f); }
+    #next-btn:hover { background: linear-gradient(45deg, #ff8500, #e65100); }
 
     .progress { font-size: 22px; margin: 25px 0; color: #2a9d8f; }
+
     #options div {
       margin: 18px 0;
       font-size: 19px;
@@ -89,16 +102,47 @@
       max-width: 600px;
       margin-left: auto;
       margin-right: auto;
-      background: #f1faee;
-      padding: 12px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: all 0.2s ease;
       color: #2c3e50;
     }
-    input[type="radio"] { margin-right: 15px; transform: scale(1.5); }
-    #result-screen h2 { font-size: 3em; color: #264653; }
-    #score-display { font-size: 2em; margin: 20px 0; color: #2a9d8f; }
-    #motivation-msg { font-size: 1.8em; font-weight: 600; color: #e63946; margin: 25px 0; }
+    #options div:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+    /* Colourful options (no red-green) */
+    #options div:nth-child(1) { background: linear-gradient(135deg, #e3f2fd, #bbdefb); } /* Soft blue */
+    #options div:nth-child(2) { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); } /* Soft mint */
+    #options div:nth-child(3) { background: linear-gradient(135deg, #fff3e0, #ffe0b2); } /* Soft peach */
+    #options div:nth-child(4) { background: linear-gradient(135deg, #f3e5f5, #e1bee7); } /* Soft lavender */
+
+    input[type="radio"] { margin-right: 15px; transform: scale(1.5); opacity: 0; position: absolute; }
+
+    label { display: block; cursor: pointer; width: 100%; }
+
+    /* Feedback message - 3 sec */
+    #feedback {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.8em;
+      font-weight: bold;
+      padding: 30px 60px;
+      border-radius: 20px;
+      color: white;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.5s;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      text-align: center;
+      min-width: 400px;
+    }
+    #feedback.show { opacity: 1; }
+
+    #feedback.correct { background: rgba(76, 175, 80, 0.95); }
+    #feedback.wrong { background: rgba(244, 67, 54, 0.95); }
   </style>
 </head>
 <body>
@@ -143,7 +187,7 @@
       <div class="progress">प्रश्न <span id="current">१</span> / <span id="total"></span> 📊</div>
       <h2 id="question"></h2>
       <div id="options"></div>
-      <button id="next-btn" onclick="nextQuestion()" disabled>पुढे ➡️</button>
+      <button id="next-btn" onclick="nextQuestion()">पुढे ➡️</button>
     </div>
     
     <div id="result-screen" style="display:none;">
@@ -155,6 +199,8 @@
         <button class="home" onclick="restart()">Homepage 🏠</button>
       </div>
     </div>
+
+    <div id="feedback"></div>
   </div>
 
   <script>
@@ -174,7 +220,7 @@
     let currentIndex = 0;
     let score = 0;
 
-    // 10 questions per part - all added
+    // Rachana Ayurvedic (Marathi) - 10 questions
     allQuestions.anatomyAyurvedic = [
       { question: "रचना शारीरानुसार शरीरातील सात धातू कोणते?", options: ["रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र", "वात, पित्त, कफ", "अग्नी, ओजस, तेजस", "सत्व, रज, तम"], answer: "रस, रक्त, मांस, मेद, अस्थी, मज्जा, शुक्र" },
       { question: "अस्थी धातूचे मुख्य स्थान कोणते?", options: ["हाडे", "त्वचा", "रक्त", "मांसपेशी"], answer: "हाडे" },
@@ -188,6 +234,7 @@
       { question: "मानवी शरीरातील सर्वात लहान हाड कोणते?", options: ["स्टेप्स", "फेमर", "टिबिया", "रेडियस"], answer: "स्टेप्स" }
     ];
 
+    // Rachana Modern (English) - 10 questions
     allQuestions.anatomyModern = [
       { question: "How many bones are in the adult human body?", options: ["206", "208", "210", "212"], answer: "206" },
       { question: "What is the longest bone in the human body?", options: ["Femur", "Tibia", "Humerus", "Fibula"], answer: "Femur" },
@@ -201,6 +248,7 @@
       { question: "What is the functional unit of bone?", options: ["Osteon", "Nephron", "Neuron", "Alveoli"], answer: "Osteon" }
     ];
 
+    // Kriya Ayurvedic (Marathi) - 10 questions
     allQuestions.kriyaAyurvedic = [
       { question: "त्रिदोष कोणते?", options: ["वात, पित्त, कफ", "रक्त, मांस, अस्थी", "अग्नी, ओजस, तेजस", "सत्व, रज, तम"], answer: "वात, पित्त, कफ" },
       { question: "अग्नीचे मुख्य कार्य काय?", options: ["पचन आणि रूपांतर", "श्वसन", "रक्ताभिसरण", "हाड मजबूत करणे"], answer: "पचन आणि रूपांतर" },
@@ -214,6 +262,7 @@
       { question: "अपाना वायूचे कार्य?", options: ["मल-मूत्र उत्सर्जन", "पचन", "श्वसन", "रक्त निर्मिती"], answer: "मल-मूत्र उत्सर्जन" }
     ];
 
+    // Kriya Modern (English) - 10 questions
     allQuestions.kriyaModern = [
       { question: "What is the normal human body temperature?", options: ["37°C", "36°C", "38°C", "35°C"], answer: "37°C" },
       { question: "Insulin hormone is secreted by which gland?", options: ["Pancreas", "Thyroid", "Adrenal", "Pituitary"], answer: "Pancreas" },
@@ -227,6 +276,7 @@
       { question: "Which organ produces bile?", options: ["Liver", "Pancreas", "Kidney", "Stomach"], answer: "Liver" }
     ];
 
+    // Padarth Vigyan (Marathi) - 10 questions
     allQuestions.padarth = [
       { question: "न्याय दर्शनानुसार पदार्थ किती?", options: ["७", "६", "९", "१६"], answer: "७" },
       { question: "'द्रव्य' म्हणजे?", options: ["पदार्थ किंवा वस्तू", "गुण", "कर्म", "सामान्यता"], answer: "पदार्थ किंवा वस्तू" },
@@ -240,6 +290,7 @@
       { question: "आकाश, वायू, तेज, जल, पृथ्वी हे काय?", options: ["पंचमहाभूत", "त्रिदोष", "धातू", "गुण"], answer: "पंचमहाभूत" }
     ];
 
+    // Sanskrit (Marathi) - 10 questions
     allQuestions.sanskrit = [
       { question: "'आयुर्वेद' चा अर्थ?", options: ["जीवन विज्ञान", "औषधी ज्ञान", "रोग अभ्यास", "योग सराव"], answer: "जीवन विज्ञान" },
       { question: "'स्वास्थ्य' म्हणजे?", options: ["आरोग्य", "रोग", "औषध", "अन्न"], answer: "आरोग्य" },
@@ -253,6 +304,7 @@
       { question: "'सुश्रुत संहिता' मुख्य विषय?", options: ["शल्यचिकित्सा", "कायचिकित्सा", "कौमारभृत्य", "अगदतंत्र"], answer: "शल्यचिकित्सा" }
     ];
 
+    // Samhita (Marathi) - 10 questions
     allQuestions.samhita = [
       { question: "चरक संहिता मुख्य विषय?", options: ["कायचिकित्सा", "शल्य", "कौमारभृत्य", "अगदतंत्र"], answer: "कायचिकित्सा" },
       { question: "हितायू चे मूल?", options: ["आरोग्य", "धर्म", "अर्थ", "काम"], answer: "आरोग्य" },
@@ -340,15 +392,16 @@
 
       q.options.forEach((opt, i) => {
         const div = document.createElement('div');
-        div.innerHTML = `<input type="radio" name="ans" value="${opt}" id="opt${i}" onchange="enableNext()"><label for="opt${i}">${opt}</label>`;
+        div.innerHTML = `<input type="radio" name="ans" value="${opt}" id="opt${i}">
+                         <label for="opt${i}">${opt}</label>`;
+        div.onclick = () => {
+          document.getElementById('opt' + i).checked = true;
+          document.getElementById('next-btn').disabled = false;
+        };
         optsDiv.appendChild(div);
       });
 
       document.getElementById('next-btn').disabled = true;
-    }
-
-    function enableNext() {
-      document.getElementById('next-btn').disabled = false;
     }
 
     function nextQuestion() {
@@ -356,19 +409,35 @@
       if (selected) {
         const userAns = selected.value.trim();
         const correct = questions[currentIndex].answer.trim();
-        if (userAns === correct) {
-          score++;
-          alert('बरोबर! ✅ +१ 🔥'.toUpperCase()); // Bigger visual feel
+        showFeedback(userAns === correct, correct);
+      } else {
+        currentIndex++;
+        if (currentIndex < questions.length) {
+          loadQuestion();
         } else {
-          alert('चुकीचे 😔\nयोग्य उत्तर: ' + correct);
+          showResult();
         }
       }
-      currentIndex++;
-      if (currentIndex < questions.length) {
-        loadQuestion();
+    }
+
+    function showFeedback(isCorrect, correctAns) {
+      const feedback = document.getElementById('feedback');
+      feedback.classList.remove('correct', 'wrong');
+      feedback.style.opacity = '0';
+
+      if (isCorrect) {
+        score++;
+        feedback.innerHTML = '✅ बरोबर! +१ 🔥';
+        feedback.classList.add('correct');
       } else {
-        showResult();
+        feedback.innerHTML = '❌ चुकीचे!<br>योग्य उत्तर: ' + correctAns;
+        feedback.classList.add('wrong');
       }
+
+      feedback.classList.add('show');
+      setTimeout(() => {
+        feedback.classList.remove('show');
+      }, 3000); // 3 seconds
     }
 
     function showResult() {
