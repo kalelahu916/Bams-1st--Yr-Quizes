@@ -36,6 +36,7 @@ button{
 .green{background:linear-gradient(135deg,#00f5a0,#00d9f5);}
 .red{background:linear-gradient(135deg,#ff4b2b,#ff416c);}
 .purple{background:linear-gradient(135deg,#b721ff,#21d4fd);}
+#marathiMsg{font-size:26px;margin:15px 0;}
 </style>
 </head>
 
@@ -83,6 +84,7 @@ button{
 
 <div class="card" id="endBox" style="display:none;">
 <h3 id="scoreText"></h3>
+<div id="marathiMsg"></div>
 <button onclick="restartQuiz()">🔁 Restart</button>
 <button onclick="goHome()">🏠 Home</button>
 </div>
@@ -95,7 +97,6 @@ button{
 </div>
 
 <script>
-/* ================= SHUFFLE OPTIONS ================= */
 function shuffleQuestion(q){
  let arr = q.o.map((opt,i)=>({t:opt,c:i===q.a}));
  for(let i=arr.length-1;i>0;i--){
@@ -106,7 +107,6 @@ function shuffleQuestion(q){
  q.a = arr.findIndex(x=>x.c);
 }
 
-/* ================== DATA ================== */
 const data = {
  anatomy:{ ayurvedic:[
  {q:"शरीर कशापासून बनले आहे?",o:["दोष धातु मल","अग्नी","इंद्रिय","ओज"],a:0},
@@ -264,6 +264,13 @@ function check(i){
  else showPopup("❌ Wrong!<br>Correct: "+q.o[q.a],"red",true);
 }
 
+function getMarathiMsg(p){
+ if(p>=90) return "🔥 अफाट कामगिरी 🔥";
+ if(p>=75) return "👏 खूप छान 👏";
+ if(p>=50) return "🙂 चांगले आहे";
+ return "💪 अजून सराव";
+}
+
 function nextQuestion(){
  const q=questions[index];
  if(!answered){answered=true;showPopup("⏭ Skipped!<br>Correct: "+q.o[q.a],"purple",true);return;}
@@ -272,7 +279,9 @@ function nextQuestion(){
  else{
   hideAll();
   document.getElementById("endBox").style.display="block";
-  document.getElementById("scoreText").innerText=`🎯 Score: ${score}/${questions.length}`;
+  let percent = Math.round((score/questions.length)*100);
+  document.getElementById("scoreText").innerText=`🎯 Score: ${score}/${questions.length} (${percent}%)`;
+  document.getElementById("marathiMsg").innerText = getMarathiMsg(percent);
  }
 }
 function restartQuiz(){startQuiz(lastCount);}
